@@ -7,8 +7,8 @@ function BillerInfo(props) {
   return html`
     <div>
       ${biller.name}
-      <address>${biller.address}</address>
-      <a href=${"tel:" + biller.phone_number}>${biller.phone_number}</a>
+      <address>${biller.address.join("\n")}</address>
+      <a href=${"tel:" + biller.tel.replace(/[^\d+]/g, "")}>${biller.tel}</a>
       ${biller.other_info}
     </div>
   `;
