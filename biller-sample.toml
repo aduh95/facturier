@@ -1,0 +1,7 @@
+name = "Joe Doe"
+address = ["line 1", "line 2"]
+tel = ""
+other_info = []
+
+IBAN = ""
+BIC = ""

@@ -1,0 +1,42 @@
+INVOICE = "Facture"
+NUMBER = "N°"
+DATE_OF_ISSUE = "Date"
+DUE_DATE = "Date"
+
+BILLED_TO = "Destinataire"
+
+DESCRIPTION = "Désignation du bien ou service"
+RATE = "Prix unitaire hors taxes"
+QUANTITY = "Quantité"
+LINE_TOTAL = "Montant net hors taxes"
+
+SUBTOTAL = "Total H.T."
+TAX = "Taxes"
+TOTAL = "Total"
+
+AMOUNT_PAID = "Acompte"
+AMOUNT_DUE = "Total dû"
+
+DISCOUNT_RATE = "Geste commercial"
+
+[BANK_INFO]
+  HEADING = "Coordonnées bancaires :"
+  IBAN = "IBAN :"
+  BIC = "BIC (SWIFT) :"
+
+[[TERMS]]
+  TEXT = "TVA non applicable, art. 293 B du CGI"
+
+[[TERMS]]
+  HEADING = "Conditions de règlement :"
+  TEXT = """\
+    Aucun escompte consenti pour paiement anticipé\nPaiement à 30 jours à \
+    compter de la réception de la facture\
+  """
+
+[[TERMS]]
+  HEADING = "Pénalités en cas de retard de paiement :"
+  TEXT = """\
+    Taux Refi appliqué par la BCE majoré de 10 points\nIndemnité forfaitaire \
+    pour frais de recouvrement : 40 euros\
+  """

@@ -1,0 +1,17 @@
+{
+  "devDependencies": {
+    "@aduh95/toml": "^0.3.2",
+    "@aduh95/toml-prettifier": "^1.0.2",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "htm": "^3.0.4",
+    "preact": "^10.4.8",
+    "puppeteer": "^5.2.1",
+    "rollup": "^2.26.11",
+    "ws": "^7.3.1"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/dev.js",
+    "prettify": "node scripts/prettify.js"
+  }
+}

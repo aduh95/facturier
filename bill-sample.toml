@@ -1,0 +1,13 @@
+reference = ""
+date = 2020-01-01
+
+account = 0
+
+[client]
+  name = ""
+  address = ["line 1", "line 2"]
+
+[[line]]
+  description = ""
+  unit_price = 0
+  quantity = 1

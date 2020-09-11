@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Facturier: Invoice Builder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <dialog open>
+      Building Invoice…
+      <progress></progress>
+      <noscript>
+        Your browser is running in `noscript` mode, this will not do!
+      </noscript>
+      <script>
+        {
+          const { currentScript } = document;
+          import("./script.js")
+            .then(() => currentScript.parentElement.remove())
+            .catch((e) => {
+              document.body.textContent = e.message;
+            });
+        }
+      </script>
+    </dialog>
+  </body>
+</html>
