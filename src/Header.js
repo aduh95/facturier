@@ -19,7 +19,7 @@ function ClientInfo(props) {
   return html`<section>
     <h3>${STRINGS.BILLED_TO}</h3>
     ${client.name}
-    <address>${client.address}</address>
+    <address>${client.address.join("\n")}</address>
     ${client.other_info}
   </section>`;
 }
@@ -31,12 +31,12 @@ function InvoiceInfo(props) {
     <!-- Invoice Number -->
     <label>
       <span>${STRINGS.NUMBER}</span>
-      <input readonly value=${props.number} />
+      <input readonly value=${props.reference} />
     </label>
     <!-- Date of issue -->
     <label>
       <span>${STRINGS.DATE_OF_ISSUE}</span>
-      <input readonly value=${props.dateOfIssue} />
+      <input readonly value=${props.date.$__toml_private_datetime} />
     </label>
   </div>`;
 }

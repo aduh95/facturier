@@ -1,13 +1,14 @@
-reference = ""
-date = 2020-01-01
+reference = "00000" # Invoice Number
+date = 2020-01-01 # Date of issue
 
-account = 0
+currency = ""
+prepaid = 0 # Amount already paid by the client
 
 [client]
   name = ""
   address = ["line 1", "line 2"]
 
 [[line]]
-  description = ""
-  unit_price = 0
+  description = "item description"
+  unit_price = 0 # or hour rate
   quantity = 1

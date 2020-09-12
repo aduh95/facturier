@@ -1,5 +1,7 @@
-import TOML from "@aduh95/toml";
+import { resolve } from "path";
 import { fileURLToPath } from "url";
+
+import TOML from "@aduh95/toml";
 
 const STRING_DIR = new URL("../lang/", import.meta.url);
 // TODO: get selected lang from invoice
@@ -91,11 +93,16 @@ export default function plugin() {
   return {
     name: "toml",
     resolveId(source) {
-      // This signals that rollup should not ask other plugins or check the file
-      // system to find this id.
-      return source === "lang:strings.toml"
-        ? fileURLToPath(SELECTED_LANG)
-        : null;
+      switch (source) {
+        case "cli:argv[2].toml":
+          return resolve(process.argv[2]);
+
+        case "lang:strings.toml":
+          return fileURLToPath(SELECTED_LANG);
+
+        default:
+          return source.endsWith(".toml") ? source : null;
+      }
     },
     transform(code, id) {
       if (!id.endsWith(".toml")) {
