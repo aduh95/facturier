@@ -47,6 +47,11 @@ export default async function router(req, res) {
           );
         });
 
+    case "/autoRefresh.js":
+      res.setHeader("Content-Type", "application/javascript");
+      createReadStream(new URL("./autoRefresh.js", import.meta.url)).pipe(res);
+      return;
+
     default:
       res.statusCode = 404;
       res.end(`Cannot find '${req.url}' on this server.`);

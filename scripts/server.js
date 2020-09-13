@@ -3,7 +3,7 @@ import ws from "ws";
 
 import requestListener from "./router.js";
 
-const PORT_NUMBER=8080
+const PORT_NUMBER = 8080;
 
 const connections = new Set();
 function registerConnection(connection) {
@@ -13,7 +13,7 @@ function registerConnection(connection) {
   connection.ping?.(1);
 }
 
-export function createServer() {
+export function startServer() {
   const server = http
     .createServer(requestListener)
     .listen(PORT_NUMBER, "localhost", () => {
