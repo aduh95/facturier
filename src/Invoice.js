@@ -17,13 +17,15 @@ function createIntlFormatters({ locale, currency }) {
 }
 
 export default function Invoice(props) {
+  const tax = props.tax / 100;
   let subtotal = 0;
   for (const { unitPrice, quantity } of props.line) {
     subtotal += unitPrice * quantity;
   }
-  const total = subtotal * (1 + props.tax);
+  const total = subtotal * (1 + tax);
   const childProps = {
     ...props,
+    tax,
     subtotal,
     total,
     totalDue: total - props.prepaid,
