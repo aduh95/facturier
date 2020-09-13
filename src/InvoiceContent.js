@@ -18,9 +18,9 @@ export default function InvoiceContent(props) {
         ${line.map(
           (line) => html`<tr>
             <td>${line.description}</td>
-            <td>${line.unitPrice}</td>
+            <td>${props.format.currency(line.unitPrice)}</td>
             <td>${line.quantity}</td>
-            <td>${line.unitPrice * line.quantity}</td>
+            <td>${props.format.currency(line.unitPrice * line.quantity)}</td>
           </tr>`
         )}
       </tbody>
