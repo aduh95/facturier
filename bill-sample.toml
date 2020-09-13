@@ -10,5 +10,5 @@ prepaid = 0 # Amount already paid by the client
 
 [[line]]
   description = "item description"
-  unit_price = 0 # or hour rate
+  unitPrice = 0 # or hour rate, excl. VAT
   quantity = 1

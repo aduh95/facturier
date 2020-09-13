@@ -6,7 +6,7 @@ DUE_DATE = "Date"
 BILLED_TO = "Destinataire"
 
 DESCRIPTION = "Désignation du bien ou service"
-RATE = "Prix unitaire hors taxes"
+UNIT_PRICE = "Prix unitaire hors taxes"
 QUANTITY = "Quantité"
 LINE_TOTAL = "Montant net hors taxes"
 
