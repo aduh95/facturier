@@ -1,14 +1,27 @@
 reference = "00000" # Invoice Number
 date = 2020-01-01 # Date of issue
 
-currency = ""
-prepaid = 0 # Amount already paid by the client
+locale = "en-US"
+currency = "USD"
+prepaid = 50 # Amount already paid by the client
+tax = 5 # VAT in percent
 
 [client]
-  name = ""
+  name = "Client name"
   address = ["line 1", "line 2"]
+  other_info = ["optional other info", "other info line 2"]
 
 [[line]]
   description = "item description"
-  unitPrice = 0 # or hour rate, excl. VAT
+  unitPrice = 100 # or hour rate, excl. VAT
+  quantity = 3
+
+[[line]]
+  description = "item description #2"
+  unitPrice = 500 # or hour rate, excl. VAT
+  quantity = 2
+
+[[line]]
+  description = "item description #3"
+  unitPrice = 250 # or hour rate, excl. VAT
   quantity = 1
