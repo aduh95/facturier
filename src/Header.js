@@ -1,6 +1,7 @@
 import { html } from "htm/preact";
 
 import STRINGS from "lang:strings.toml";
+import "./Header.scss";
 
 function BillerInfo(props) {
   const { biller } = props;
@@ -9,7 +10,9 @@ function BillerInfo(props) {
       ${biller.name}
       <address>${biller.address.join("\n")}</address>
       <a href=${"tel:" + biller.tel.replace(/[^\d+]/g, "")}>${biller.tel}</a>
-      ${biller.other_info}
+      <ul>
+        ${biller.other_info?.map((item) => html`<li>${item}</li>`)}
+      </ul>
     </div>
   `;
 }
@@ -20,12 +23,14 @@ function ClientInfo(props) {
     <h3>${STRINGS.BILLED_TO}</h3>
     ${client.name}
     <address>${client.address.join("\n")}</address>
-    ${client.other_info?.join("\n")}
+    <ul>
+      ${client.other_info?.map((item) => html`<li>${item}</li>`)}
+    </ul>
   </section>`;
 }
 
 function InvoiceInfo(props) {
-  return html`<div>
+  return html`
     <!-- Billed to -->
     <${ClientInfo} client=${props.client} />
     <!-- Invoice Number -->
@@ -36,17 +41,19 @@ function InvoiceInfo(props) {
     <!-- Date of issue -->
     <label>
       <span>${STRINGS.DATE_OF_ISSUE}</span>
-      <input readonly value=${props.date.$__toml_private_datetime} />
+      <input readonly value=${props.date?.$__toml_private_datetime} />
     </label>
     <label>
       <span>${STRINGS.AMOUNT_DUE}</span>
       <input readonly value=${props.format.currency(props.totalDue)} />
     </label>
-  </div>`;
+  `;
 }
 
 export default function Header(props) {
-  return html`<h1>${STRINGS.INVOICE}</h1>
+  return html`<header>
+    <h1>${STRINGS.INVOICE}</h1>
     <${BillerInfo} ...${props} />
-    <${InvoiceInfo} ...${props} />`;
+    <${InvoiceInfo} ...${props} />
+  </header>`;
 }
