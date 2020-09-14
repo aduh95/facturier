@@ -25,18 +25,18 @@ DISCOUNT_RATE = "Geste commercial"
   BIC = "BIC (SWIFT) :"
 
 [[TERMS]]
-  TEXT = "TVA non applicable, art. 293 B du CGI"
+  TEXT = ["TVA non applicable, art. 293 B du CGI"]
 
 [[TERMS]]
   HEADING = "Conditions de règlement :"
-  TEXT = """\
-    Aucun escompte consenti pour paiement anticipé\nPaiement à 30 jours à \
-    compter de la réception de la facture\
-  """
+  TEXT = [
+    "Aucun escompte consenti pour paiement anticipé.",
+    "Paiement à 30 jours à compter de la réception de la facture.",
+  ]
 
 [[TERMS]]
   HEADING = "Pénalités en cas de retard de paiement :"
-  TEXT = """\
-    Taux Refi appliqué par la BCE majoré de 10 points\nIndemnité forfaitaire \
-    pour frais de recouvrement : 40 euros\
-  """
+  TEXT = [
+    "Taux Refi appliqué par la BCE majoré de 10 points.",
+    "Indemnité forfaitaire pour frais de recouvrement : 40 euros.",
+  ]
