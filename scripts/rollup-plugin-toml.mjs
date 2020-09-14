@@ -1,11 +1,8 @@
-import { resolve } from "path";
-import { fileURLToPath } from "url";
-
 import TOML from "@aduh95/toml";
-
-const STRING_DIR = new URL("../lang/", import.meta.url);
-// TODO: get selected lang from invoice
-const SELECTED_LANG = new URL("./fr.toml", STRING_DIR);
+import {
+  getLangFromCurrentInvoice,
+  INVOICE_FILE_PATH,
+} from "./get-invoice-info.js";
 
 const reservedNames = [
   "instanceof",
@@ -95,10 +92,11 @@ export default function plugin() {
     resolveId(source) {
       switch (source) {
         case "cli:argv[2].toml":
-          return resolve(process.argv[2]);
+          return INVOICE_FILE_PATH;
 
         case "lang:strings.toml":
-          return fileURLToPath(SELECTED_LANG);
+          // TODO: disable cache for this entry
+          return getLangFromCurrentInvoice();
 
         default:
           return source.endsWith(".toml") ? source : null;

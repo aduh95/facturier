@@ -1,8 +1,8 @@
 reference = "00000" # Invoice Number
 date = 2020-01-01 # Date of issue
 
-locale = "en-US"
-currency = "USD"
+locale = "fr-CA"
+currency = "CAD"
 prepaid = 50 # Amount already paid by the client
 tax = 5 # VAT in percent
 
