@@ -1,0 +1,27 @@
+main table {
+  border-collapse: collapse;
+  margin: 3rem 0;
+  width: 100%;
+  text-align: end;
+
+  th,
+  td {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #f79646 transparent;
+    padding: 1rem;
+
+    &:first-child {
+      text-align: start;
+    }
+  }
+
+  th {
+    border: 2px none purple;
+    border-top-style: solid;
+  }
+
+  tbody > tr:nth-child(even) {
+    // background-color: #333;
+  }
+}

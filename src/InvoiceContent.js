@@ -2,6 +2,8 @@ import { html } from "htm/preact";
 
 import STRINGS from "lang:strings.toml";
 
+import "./InvoiceContent.scss";
+
 export default function InvoiceContent(props) {
   const { line } = props;
   return html`<main>
