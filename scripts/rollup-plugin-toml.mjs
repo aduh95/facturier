@@ -1,7 +1,7 @@
 import TOML from "@aduh95/toml";
 import {
   getLangFromCurrentInvoice,
-  INVOICE_FILE_PATH,
+  getInvoiceFilePath,
 } from "./get-invoice-info.js";
 
 const reservedNames = [
@@ -92,7 +92,7 @@ export default function plugin() {
     resolveId(source) {
       switch (source) {
         case "cli:argv[2].toml":
-          return INVOICE_FILE_PATH;
+          return getInvoiceFilePath();
 
         case "lang:strings.toml":
           // TODO: disable cache for this entry

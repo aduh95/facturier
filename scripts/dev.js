@@ -1,8 +1,9 @@
 import { watch, promises as fs } from "fs";
-import { startServer, refreshBrowser } from "./server.js";
 
-const INPUT_DIR = new URL("../", import.meta.url);
-const excluded = [".git", "node_modules"];
+import { startServer, refreshBrowser } from "./server.js";
+import { getInvoiceFilePath } from "./get-invoice-info.js";
+
+import { LANG_DIR, SRC_DIR } from "./config.js";
 
 function watcher(event, fileName) {
   console.log(event, fileName);
@@ -16,9 +17,7 @@ const watchDir = (dir) =>
       files
         .filter(
           (fileName) =>
-            !fileName.endsWith(".toml.d.ts") &&
-            !fileName.endsWith(".toml.js") &&
-            !excluded.includes(fileName)
+            !fileName.endsWith(".toml.d.ts") && !fileName.endsWith(".toml.js")
         )
         .map((file) => new URL(file, dir))
         .map((path) =>
@@ -33,6 +32,9 @@ const watchDir = (dir) =>
     )
   );
 
-watchDir(INPUT_DIR)
-  .then(() => startServer())
-  .catch(console.error);
+await Promise.all([
+  watchDir(SRC_DIR),
+  watchDir(LANG_DIR),
+  watchFile(getInvoiceFilePath()),
+]);
+startServer();

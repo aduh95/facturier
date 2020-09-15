@@ -5,9 +5,9 @@ import resolve from "@rollup/plugin-node-resolve";
 import sass from "./rollup-plugin-sass.mjs";
 import toml from "./rollup-plugin-toml.mjs";
 
-const plugins = [resolve(), sass(), toml()];
+import { SRC_DIR } from "./config.js";
 
-const INPUT_DIR = new URL("../src/", import.meta.url);
+const plugins = [resolve(), sass(), toml()];
 
 let cache;
 async function buildWithCache(input) {
@@ -18,6 +18,6 @@ async function buildWithCache(input) {
 }
 
 export default () =>
-  buildWithCache(
-    fileURLToPath(new URL("./index.js", INPUT_DIR))
-  ).then((bundle) => bundle.generate({ sourcemap: "hidden", format: "esm" }));
+  buildWithCache(fileURLToPath(new URL("./index.js", SRC_DIR))).then((bundle) =>
+    bundle.generate({ sourcemap: "hidden", format: "esm" })
+  );

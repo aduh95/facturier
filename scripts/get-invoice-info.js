@@ -1,14 +1,32 @@
-import { promises as fs } from "fs";
+import process from "process";
+import { existsSync, promises as fs } from "fs";
 import { resolve } from "path";
 import { fileURLToPath } from "url";
 
-const STRING_DIR = new URL("../lang/", import.meta.url);
+import { LANG_DIR } from "./config.js";
 
 const GET_LANG_FROM_LOCALE = /locale\s*=\s*["']{1,3}([a-z]{2})-/;
-export const INVOICE_FILE_PATH = resolve(process.argv[2]);
 
 export async function getLangFromCurrentInvoice() {
-  const invoiceContent = await fs.readFile(INVOICE_FILE_PATH, "utf8");
+  const invoiceContent = await fs.readFile(getInvoiceFilePath(), "utf8");
   const [, lang] = invoiceContent.match(GET_LANG_FROM_LOCALE);
-  return fileURLToPath(new URL(lang + ".toml", STRING_DIR));
+  return fileURLToPath(new URL(lang + ".toml", LANG_DIR));
+}
+
+let invoicePathCache;
+export function getInvoiceFilePath() {
+  if (invoicePathCache) return invoicePathCache;
+
+  if (typeof process.argv[2] !== "string") {
+    throw new Error("You must specify an invoice file as argument.");
+  }
+  invoicePathCache = resolve(process.argv[2]);
+  if (!existsSync(invoicePathCache) || !invoicePathCache.endsWith(".toml")) {
+    process.emitWarning(
+      new Error(
+        `The invoice file should be a valid TOML file. Received '${invoicePathCache}'.`
+      )
+    );
+  }
+  return invoicePathCache;
 }
