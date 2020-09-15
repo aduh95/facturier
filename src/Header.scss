@@ -1,4 +1,18 @@
 header {
+  display: grid;
+  grid-template-areas:
+    "from heading"
+    "from details"
+    "form to";
+  h1 {
+    grid-area: heading;
+  }
+  .client-info {
+    grid-area: to;
+  }
+  address {
+    white-space: pre-line;
+  }
   ul {
     list-style: none;
     margin: 0;

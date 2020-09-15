@@ -19,7 +19,7 @@ function BillerInfo(props) {
 
 function ClientInfo(props) {
   const { client } = props;
-  return html`<section>
+  return html`<section class="client-info">
     <h3>${STRINGS.BILLED_TO}</h3>
     ${client.name}
     <address>${client.address.join("\n")}</address>
@@ -33,20 +33,22 @@ function InvoiceInfo(props) {
   return html`
     <!-- Billed to -->
     <${ClientInfo} client=${props.client} />
-    <!-- Invoice Number -->
-    <label>
-      <span>${STRINGS.NUMBER}</span>
-      <input readonly value=${props.reference} />
-    </label>
-    <!-- Date of issue -->
-    <label>
-      <span>${STRINGS.DATE_OF_ISSUE}</span>
-      <input readonly value=${props.date?.$__toml_private_datetime} />
-    </label>
-    <label>
-      <span>${STRINGS.AMOUNT_DUE}</span>
-      <input readonly value=${props.format.currency(props.totalDue)} />
-    </label>
+    <div style="grid-area:details">
+      <!-- Invoice Number -->
+      <label>
+        <span>${STRINGS.NUMBER}</span>
+        <input readonly value=${props.reference} />
+      </label>
+      <!-- Date of issue -->
+      <label>
+        <span>${STRINGS.DATE_OF_ISSUE}</span>
+        <input readonly value=${props.date?.$__toml_private_datetime} />
+      </label>
+      <label>
+        <span>${STRINGS.AMOUNT_DUE}</span>
+        <input readonly value=${props.format.currency(props.totalDue)} />
+      </label>
+    </div>
   `;
 }
 
