@@ -15,14 +15,13 @@
         Your browser is running in `noscript` mode, this will not do!
       </noscript>
       <script>
-        {
-          const { currentScript } = document;
-          import("./script.js")
-            .then(() => currentScript.parentElement.remove())
-            .catch((e) => {
-              document.body.textContent = e.message;
-            });
-        }
+        import("./script.js")
+          .then(
+            HTMLElement.prototype.remove.bind(document.currentScript.parentNode)
+          )
+          .catch((e) => {
+            document.body.textContent = e.message;
+          });
       </script>
     </dialog>
   </body>
