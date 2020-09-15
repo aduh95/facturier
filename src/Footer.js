@@ -1,5 +1,7 @@
 import { html } from "htm/preact";
 
+import "./Footer.scss";
+
 import STRINGS from "lang:strings.toml";
 
 const createTerm = (terms) =>
@@ -13,14 +15,6 @@ const createTerm = (terms) =>
 export default function Footer(props) {
   const { format } = props;
   return html`<footer>
-    ${STRINGS.TERMS.map(createTerm)}
-    <section>
-      <h5>${STRINGS.BANK_INFO.HEADING}</h5>
-      <ul>
-        <li>${STRINGS.BANK_INFO.IBAN} ${props.biller.IBAN}</li>
-        <li>${STRINGS.BANK_INFO.BIC} ${props.biller.BIC}</li>
-      </ul>
-    </section>
     <section>
       <h5>${STRINGS.SUBTOTAL}</h5>
       <output>${format.currency(props.subtotal)}</output>
@@ -35,5 +29,15 @@ export default function Footer(props) {
       <h4>${STRINGS.AMOUNT_DUE} (${props.currency})</h4>
       <output>${format.currency(props.totalDue)}</output>
     </section>
+    <aside>
+      ${STRINGS.TERMS.map(createTerm)}
+      <section>
+        <h5>${STRINGS.BANK_INFO.HEADING}</h5>
+        <ul>
+          <li>${STRINGS.BANK_INFO.IBAN} ${props.biller.IBAN}</li>
+          <li>${STRINGS.BANK_INFO.BIC} ${props.biller.BIC}</li>
+        </ul>
+      </section>
+    </aside>
   </footer>`;
 }
