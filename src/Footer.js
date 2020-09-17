@@ -27,7 +27,7 @@ export default function Footer(props) {
       <output>${format.currency(props.prepaid)}</output>
       <hr />
       <h4>${STRINGS.AMOUNT_DUE} (${props.currency})</h4>
-      <output>${format.currency(props.totalDue)}</output>
+      <strong>${format.currency(props.totalDue)}</strong>
     </section>
     <aside>
       ${STRINGS.TERMS.map(createTerm)}

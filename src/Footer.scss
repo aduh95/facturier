@@ -25,13 +25,19 @@ footer {
     h5 {
       margin: 0;
     }
-    output {
+    output,
+    strong {
       padding-right: 1rem;
     }
   }
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  aside {
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    h5 {
+      margin-bottom: 0;
+    }
   }
 }
