@@ -3,7 +3,7 @@ NUMBER = "N°"
 DATE_OF_ISSUE = "Date"
 DUE_DATE = "Date"
 
-BILLED_TO = "Destinataire"
+BILLED_TO = "À destination de"
 
 DESCRIPTION = "Désignation du bien ou service"
 UNIT_PRICE = "Prix unitaire hors taxes"

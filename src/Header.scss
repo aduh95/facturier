@@ -1,14 +1,40 @@
+@import "./colors";
+
 header {
   display: grid;
   grid-template-areas:
     "from heading"
-    "from details"
-    "form to";
+    "from to"
+    "details to";
+  grid-template-columns: auto 1fr;
   h1 {
     grid-area: heading;
+    text-align: center;
+    font-size: 3rem;
+    letter-spacing: 0.2em;
+  }
+  h1,
+  h3 {
+    font-weight: 100;
+    font-variant: small-caps;
   }
   .client-info {
     grid-area: to;
+    margin: auto;
+    // margin-right: 4rem;
+  }
+  .invoice-details {
+    grid-area: details;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0 1ch;
+
+    label {
+      display: contents;
+      & > span {
+        color: $autumn;
+      }
+    }
   }
   address {
     white-space: pre-line;

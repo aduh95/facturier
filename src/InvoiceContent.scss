@@ -1,3 +1,5 @@
+@import "./colors";
+
 main table {
   border-collapse: collapse;
   margin: 3rem 0;
@@ -8,7 +10,7 @@ main table {
   td {
     border-width: 1px;
     border-style: solid;
-    border-color: #f79646 transparent;
+    border-color: $stone transparent;
     padding: 1rem;
 
     &:first-child {
@@ -17,8 +19,10 @@ main table {
   }
 
   th {
-    border: 2px none purple;
+    border: 2px none $mist;
     border-top-style: solid;
+    color: $autumn;
+    font-size: 1rem;
   }
 
   tbody > tr:nth-child(even) {

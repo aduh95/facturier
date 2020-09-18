@@ -33,7 +33,7 @@ function InvoiceInfo(props) {
   return html`
     <!-- Billed to -->
     <${ClientInfo} client=${props.client} />
-    <div style="grid-area:details">
+    <div class="invoice-details">
       <!-- Invoice Number -->
       <label>
         <span>${STRINGS.NUMBER}</span>
