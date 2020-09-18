@@ -37,16 +37,16 @@ function InvoiceInfo(props) {
       <!-- Invoice Number -->
       <label>
         <span>${STRINGS.NUMBER}</span>
-        <input readonly value=${props.reference} />
+        <output>${props.reference}</output>
       </label>
       <!-- Date of issue -->
       <label>
         <span>${STRINGS.DATE_OF_ISSUE}</span>
-        <input readonly value=${props.date?.$__toml_private_datetime} />
+        <output>${props.date?.$__toml_private_datetime}</output>
       </label>
       <label>
         <span>${STRINGS.AMOUNT_DUE}</span>
-        <input readonly value=${props.format.currency(props.totalDue)} />
+        <output>${props.format.currency(props.totalDue)}</output>
       </label>
     </div>
   `;
