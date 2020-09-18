@@ -11,6 +11,7 @@ footer {
     gap: 0 10ch;
     align-items: center;
     text-align: end;
+    font-size: larger;
 
     hr {
       grid-column: span 2;
@@ -36,6 +37,7 @@ footer {
     }
   }
   aside {
+    font-size: small;
     ul {
       list-style: none;
       margin: 0;

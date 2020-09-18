@@ -1,6 +1,22 @@
 @import "./colors";
 
+html,
 body {
+  height: 99%; // I would put 100%, but Chrome is buggy
+  //   height: -webkit-fill-available; // Same for those bad boys, I wish I…
+  //   height: fill-available; // …could use them, but Chrome won't let me
+  margin: 0;
+  box-sizing: border-box;
   background-color: $bg-color;
   color: $font-color;
+  font-size: 15px;
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0.5rem;
 }
