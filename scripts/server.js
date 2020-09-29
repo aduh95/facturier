@@ -3,7 +3,7 @@ import ws from "ws";
 
 import requestListener from "./router.js";
 
-const PORT_NUMBER = 8080;
+export const PORT_NUMBER = 8080;
 
 const connections = new Set();
 function registerConnection(connection) {
