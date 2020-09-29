@@ -1,0 +1,3 @@
+[submodule "invoices"]
+	path = user_data
+	url = git@github.com:aduh95/invoices.git
