@@ -1,5 +1,5 @@
-reference = "00000" # Invoice Number
-date = 2020-01-01 # Date of issue
+reference = "REPLACEME" # Invoice Number, will be replaced
+date = "REPLACEME" # Date of issue, will be replaced by local date on build
 
 locale = "fr-CA"
 currency = "CAD"

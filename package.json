@@ -14,7 +14,7 @@
   },
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.js",
+    "build": "node scripts/commitDraft.js",
     "prettify": "node scripts/prettify.js",
     "start": "node scripts/dev.js"
   },
