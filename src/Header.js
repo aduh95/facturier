@@ -42,7 +42,10 @@ function InvoiceInfo(props) {
       <!-- Date of issue -->
       <label>
         <span>${STRINGS.DATE_OF_ISSUE}</span>
-        <output>${props.date?.$__toml_private_datetime}</output>
+        <output
+          >${props.date?.$__toml_private_datetime ??
+          html`<i>REPLACEME</i>`}</output
+        >
       </label>
       <label>
         <span>${STRINGS.AMOUNT_DUE}</span>
