@@ -11,7 +11,7 @@ const closeServer = startServer();
 const browser = await puppeteer.launch();
 const page = await browser.newPage();
 
-await page.goto(`http://localhost:${PORT_NUMBER}/`);
+await page.goto(`http://localhost:${await PORT_NUMBER}/`);
 
 await page.pdf({
   path,

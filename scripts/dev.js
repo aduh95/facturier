@@ -1,6 +1,6 @@
 import { watch, promises as fs } from "fs";
 
-import { startServer, refreshBrowser } from "./server.js";
+import { PORT_NUMBER, startServer, refreshBrowser } from "./server.js";
 import { getInvoiceFilePath } from "./get-invoice-info.js";
 
 import { LANG_DIR, SRC_DIR } from "./config.js";
@@ -37,4 +37,5 @@ await Promise.all([
   watchDir(LANG_DIR),
   watchFile(getInvoiceFilePath()),
 ]);
-startServer();
+await startServer();
+console.log(`Server started on http://localhost:${await PORT_NUMBER}`);

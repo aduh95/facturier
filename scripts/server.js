@@ -3,7 +3,11 @@ import ws from "ws";
 
 import requestListener from "./router.js";
 
-export const PORT_NUMBER = 8080;
+let savePortNumber, onServerError;
+export const PORT_NUMBER = new Promise((resolve, reject) => {
+  savePortNumber = resolve;
+  onServerError = reject;
+});
 
 const connections = new Set();
 function registerConnection(connection) {
@@ -14,17 +18,23 @@ function registerConnection(connection) {
 }
 
 export function startServer() {
-  const server = http
-    .createServer(requestListener)
-    .listen(PORT_NUMBER, "localhost", () => {
-      console.log(`Server started on http://localhost:${PORT_NUMBER}`);
-    });
+  const server = http.createServer(requestListener).listen(0, "localhost");
+  let serverError;
 
+  server.on("listening", () => {
+    savePortNumber(server.address().port);
+  });
+  server.on("error", (err) => {
+    serverError = err;
+    onServerError(err);
+  });
   server.on("connection", registerConnection);
   new ws.Server({ server }).on("connection", registerConnection);
 
   return () =>
-    new Promise((done) => {
+    new Promise((done, reject) => {
+      if (serverError) return reject(serverError);
+
       for (const connection of connections) {
         connection.terminate?.();
         connection.destroy?.();
