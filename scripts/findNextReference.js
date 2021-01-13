@@ -5,16 +5,12 @@ export function findNextReference(dir, year) {
     .readdirSync(dir)
     .filter(
       (fileName) => fileName.startsWith(year) && fileName.endsWith(".toml")
-    )
-    .sort();
-
-  const lastReference = files.pop();
-  const ref =
-    lastReference.substring(0, 2) === year
-      ? (Number(lastReference.substring(2, 5)) + 1)
-          .toString(10)
-          .padStart(3, "0")
-      : "001";
+    );
+  const ref = files.length
+    ? (Number(files.sort().pop().substring(2, 5)) + 1)
+        .toString(10)
+        .padStart(3, "0")
+    : "001";
 
   return `${year}${ref}`;
 }
