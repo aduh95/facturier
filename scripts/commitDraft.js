@@ -87,12 +87,6 @@ try {
         : resolve()
     );
   });
-
-  console.log(
-    "Type the following command for completeness: `" +
-      `cd ${dir} && git push` +
-      "`"
-  );
 } catch (reason) {
   console.error("Failed because of reason", reason);
 }
