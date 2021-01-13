@@ -28,12 +28,18 @@ try {
   const outputPath = path.join(dir, ref + ".toml");
   const output = fs.createWriteStream(outputPath);
 
-  for await (const line of sed(input, ref, date))
+  let sendEmail = false;
+
+  for await (const line of sed(input, ref, date)) {
+    if (line.endsWith("[email]")) sendEmail = true;
+
     await new Promise((resolve, reject) =>
       output.write(line + "\n", (err) => (err ? reject(err) : resolve()))
     );
+  }
 
   await new Promise((resolve, reject) => {
+    console.log("Building PDF file…");
     const child_process = spawn(
       process.argv0,
       [fileURLToPath(new URL("./build.js", import.meta.url)), outputPath],
@@ -48,6 +54,27 @@ try {
         : resolve()
     );
   });
+
+  if (sendEmail) {
+    console.log("Sending the email…");
+    await new Promise((resolve, reject) => {
+      const child_process = spawn(
+        process.argv0,
+        [fileURLToPath(new URL("./sendEmail.js", import.meta.url)), outputPath],
+        {
+          stdio: ["inherit", "inherit", "inherit"],
+        }
+      );
+      child_process.on("error", reject);
+      child_process.on("exit", (code) =>
+        code
+          ? reject(
+              new Error(`sendEmail script exited with error code: ${code}`)
+            )
+          : resolve()
+      );
+    });
+  }
 
   await new Promise((resolve, reject) => {
     const child_process = spawn("git", ["add", `${ref}.*`], {
