@@ -17,7 +17,8 @@
   "scripts": {
     "build": "node scripts/commitDraft.js",
     "prettify": "node scripts/prettify.js",
-    "start": "node scripts/dev.js"
+    "start": "node scripts/dev.js",
+    "total": "node scripts/getTotal.js"
   },
   "license": "MIT"
 }
