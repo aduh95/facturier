@@ -1,10 +1,11 @@
 {
   "name": "@aduh95/facturier",
-  "devDependencies": {
+  "dependencies": {
     "@aduh95/toml": "^0.3.2",
     "@aduh95/toml-prettifier": "^1.0.2",
     "@rollup/plugin-node-resolve": "^11.0.0",
     "fibers": "^5.0.0",
+    "googleapis": "^67.0.0",
     "htm": "^3.0.4",
     "preact": "^10.4.8",
     "puppeteer": "^5.2.1",
