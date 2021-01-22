@@ -5,7 +5,7 @@ import TOML from "@aduh95/toml";
 import { getInvoiceFilePath } from "./get-invoice-info.js";
 
 const { client, currency, line, prepaid, tax } = TOML.parse(
-  fs.readFileSync(getInvoiceFilePath()).toString()
+  fs.readFileSync(getInvoiceFilePath())
 );
 
 console.log("Invoiced to", client?.name);

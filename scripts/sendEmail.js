@@ -17,7 +17,7 @@ const SCOPES = [
   "https://www.googleapis.com/auth/gmail.send",
 ];
 
-const { email } = TOML.parse(fs.readFileSync(getInvoiceFilePath()).toString());
+const { email } = TOML.parse(fs.readFileSync(getInvoiceFilePath()));
 if (email?.from == null) {
   throw new Error(
     "The targeted invoice doesn't contain a valid `email` section."
