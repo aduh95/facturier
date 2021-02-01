@@ -101,7 +101,7 @@ async function getNewToken(oAuth2Client) {
 
 function getName(fromPathOrURL) {
   const path = fromPathOrURL.toString();
-  return path.toString().substring(path.lastIndexOf("/"));
+  return path.toString().substring(path.lastIndexOf("/") + 1);
 }
 
 function makeBody({ cc, to, from, subject, message, attachments }) {
