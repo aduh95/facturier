@@ -30,6 +30,9 @@ header {
     gap: 2rem;
     align-items: center;
 
+    font-variant: small-caps;
+    text-transform: capitalize;
+
     label {
       display: flex;
       flex-direction: column;
