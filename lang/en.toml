@@ -1,0 +1,46 @@
+INVOICE = "Invoice"
+NUMBER = "Invoice number"
+DATE_OF_ISSUE = "Date of issue"
+DUE_DATE = "Date"
+
+BILLED_TO = "Billed to"
+
+DESCRIPTION = "Description"
+UNIT_PRICE = "Hour rate"
+QUANTITY = "Quantity"
+LINE_TOTAL = "Amount"
+
+SUBTOTAL = "Subtotal"
+TAX = "Tax"
+TOTAL = "Total"
+
+AMOUNT_PAID = "Prepaid amount"
+AMOUNT_DUE = "Invoice total"
+
+DISCOUNT_RATE = "Discount rate"
+
+[BANK_INFO]
+  HEADING = "Bank information:"
+  IBAN = "IBAN:"
+  BIC = "BIC (SWIFT):"
+
+[[TERMS]]
+  TEXT = [
+    "This invoice is subject to the reverse-charge-procedure and corresponding to article 196 of the EU policy 2006/112/EC the receiver has to pay VAT.",
+    "",
+    "VAT not applicable, art. 293 B of the General Tax Code (TVA non applicable, article 293 B du CGI).",
+  ]
+
+[[TERMS]]
+  HEADING = "Payment conditions:"
+  TEXT = [
+    "No discount will be granted for early settlement.",
+    "The maximum time limit for payment is set at thirty days following the date of receipt of the invoice or an equivalent request for payment.",
+  ]
+
+[[TERMS]]
+  HEADING = "Penalties for late payment:"
+  TEXT = [
+    "Refi rate applied by the ECB plus 10 points.",
+    "Fixed compensation for collection costs: 40 euros.",
+  ]
