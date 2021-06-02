@@ -35,7 +35,7 @@ function convertCurrency(line, currencyToConvertTo) {
       );
       return (
         line.replace(currencyToConvertFrom, currencyToConvertTo) +
-        `# Converted from ${match[0]} at rate of ${exchangeRate}.`
+        ` # Converted from ${match[0]} at rate of ${exchangeRate}.`
       );
     }
   }
