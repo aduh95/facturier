@@ -16,6 +16,37 @@ async function* sed(input, ref, date) {
     } else yield line;
   }
 }
+
+const emailTableHeader = /^\s*\[email\]/;
+const convertToCurrency = /^\s*convertToCurrency\s*=\s*["']([A-Z]+)["']/;
+const currencyToConvertFrom = /(?<=^\s*currency\s*=\s*["'])[A-Z]+/;
+const unitPriceToConvert = /(?<=^\s*unitPrice\s*=\s)\d+(?:\.\d+)?/;
+let exchangeRate;
+
+function convertCurrency(line, currencyToConvertTo) {
+  if (currencyToConvertTo == null) return line;
+
+  if (exchangeRate == null) {
+    const match = currencyToConvertFrom.exec(line);
+    if (match !== null) {
+      exchangeRate = 0.82; // hardcoded value for USD -> EUR
+      console.log(
+        `Converting from ${match[0]} to ${currencyToConvertTo} at rate of ${exchangeRate}`
+      );
+      return (
+        line.replace(currencyToConvertFrom, currencyToConvertTo) +
+        `# Converted from ${match[0]} at rate of ${exchangeRate}.`
+      );
+    }
+  }
+
+  const match = unitPriceToConvert.exec(line);
+  if (match == null) return line;
+
+  if (exchangeRate == null) throw new Error("Unknown exchange rate");
+
+  return line.replace(unitPriceToConvert, Number(match[0]) * exchangeRate);
+}
 try {
   const inputPath = getInvoiceFilePath();
 
@@ -29,12 +60,23 @@ try {
   const output = fs.createWriteStream(outputPath);
 
   let sendEmail = false;
+  let currencyToConvertTo;
 
   for await (const line of sed(input, ref, date)) {
-    if (line.endsWith("[email]")) sendEmail = true;
+    if (emailTableHeader.test(line)) sendEmail = true;
+
+    if (currencyToConvertTo == null) {
+      const match = convertToCurrency.exec(line);
+      if (match) {
+        currencyToConvertTo = match[1];
+        continue;
+      }
+    }
 
     await new Promise((resolve, reject) =>
-      output.write(line + "\n", (err) => (err ? reject(err) : resolve()))
+      output.write(convertCurrency(line, currencyToConvertTo) + "\n", (err) =>
+        err ? reject(err) : resolve()
+      )
     );
   }
 
