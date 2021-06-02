@@ -91,7 +91,7 @@ async function getNewToken(oAuth2Client) {
         // Store the token to disk for later program executions
         fs.writeFile(TOKEN_URL, JSON.stringify(token), (err) => {
           if (err) return console.error(err);
-          console.log("Token stored to", TOKEN_PATH);
+          console.log("Token stored to", TOKEN_URL);
         });
         callback(oAuth2Client);
       });
