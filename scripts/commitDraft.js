@@ -23,13 +23,14 @@ const currencyToConvertFrom = /(?<=^\s*currency\s*=\s*["'])[A-Z]+/;
 const unitPriceToConvert = /(?<=^\s*unitPrice\s*=\s)\d+(?:\.\d+)?/;
 let exchangeRate;
 
-function convertCurrency(line, currencyToConvertTo) {
+async function convertCurrency(line, currencyToConvertTo) {
   if (currencyToConvertTo == null) return line;
 
   if (exchangeRate == null) {
     const match = currencyToConvertFrom.exec(line);
     if (match !== null) {
-      exchangeRate = 0.82; // hardcoded value for USD -> EUR
+      const converter = await import("./get-exchange-rate.js");
+      exchangeRate = await converter.default(match[0], currencyToConvertTo);
       console.log(
         `Converting from ${match[0]} to ${currencyToConvertTo} at rate of ${exchangeRate}`
       );
@@ -73,10 +74,11 @@ try {
       }
     }
 
-    await new Promise((resolve, reject) =>
-      output.write(convertCurrency(line, currencyToConvertTo) + "\n", (err) =>
-        err ? reject(err) : resolve()
-      )
+    await convertCurrency(line, currencyToConvertTo).then(
+      (line) =>
+        new Promise((resolve, reject) =>
+          output.write(line + "\n", (err) => (err ? reject(err) : resolve()))
+        )
     );
   }
 
