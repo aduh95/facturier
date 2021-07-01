@@ -18,5 +18,12 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+@page {
   margin: 0.5rem;
+
+  @bottom-left {
+    content: "Page" counter(page) " of " counter(pages);
+  }
 }
