@@ -34,9 +34,12 @@ if (hourlyRate) {
     }
   }
   if (nbOfDaysOff !== 0) {
-    console.log("Number of work hours per week", (nbOfHours / nbOfWorkDay) * 5);
     console.log(
-      "Number of work hours you need to work to meet the target",
+      "Number of work hours per week:",
+      (nbOfHours / nbOfWorkDay) * 5
+    );
+    console.log(
+      "Number of hours you need to work to meet target of today:",
       targetedNbOfWorkHourPerDay * nbOfWorkDay - nbOfHours
     );
   }
