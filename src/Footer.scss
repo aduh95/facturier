@@ -3,6 +3,7 @@
 footer {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  page-break-inside: avoid;
   & > section {
     order: 2;
 
