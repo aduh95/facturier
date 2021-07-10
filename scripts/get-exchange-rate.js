@@ -18,7 +18,11 @@ export default async function getExchangeRate(from, to) {
     await page.goto(xeEndpoint);
     const rate = await page.waitForSelector("p[class^='result__BigRate']");
 
-    return parseFloat(await rate.evaluate((rate) => rate.textContent), 10);
+    const rateAsStr = await rate.evaluate((rate) => rate.textContent);
+    const nonDecimalChar = /[^\d.]/.exec(rateAsStr);
+    return nonDecimalChar
+      ? rateAsStr.slice(0, nonDecimalChar.index)
+      : rateAsStr;
   } finally {
     await browser.close();
   }

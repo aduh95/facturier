@@ -2,10 +2,11 @@ import fs from "fs";
 import path from "path";
 import { spawn } from "child_process";
 import { createInterface as readline } from "readline";
-import { findNextReference } from "./findNextReference.js";
-
-import { getInvoiceFilePath } from "./get-invoice-info.js";
 import { fileURLToPath } from "url";
+
+import { findNextReference } from "./findNextReference.js";
+import { getInvoiceFilePath } from "./get-invoice-info.js";
+import safeCurrencyMultiplication from "./safeCurrencyMultiplication.js";
 
 async function* sed(input, ref, date) {
   for await (const line of input) {
@@ -46,7 +47,10 @@ async function convertCurrency(line, currencyToConvertTo) {
 
   if (exchangeRate == null) throw new Error("Unknown exchange rate");
 
-  return line.replace(unitPriceToConvert, Number(match[0]) * exchangeRate);
+  return line.replace(
+    unitPriceToConvert,
+    safeCurrencyMultiplication(match[0], exchangeRate)
+  );
 }
 try {
   const inputPath = getInvoiceFilePath();
