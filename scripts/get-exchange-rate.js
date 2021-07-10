@@ -18,10 +18,7 @@ export default async function getExchangeRate(from, to) {
     await page.goto(xeEndpoint);
     const rate = await page.waitForSelector("p[class^='result__BigRate']");
 
-    return parseFloat(
-      await rate.evaluate((rate) => rate.firstChild.textContent),
-      10
-    );
+    return parseFloat(await rate.evaluate((rate) => rate.textContent), 10);
   } finally {
     await browser.close();
   }
