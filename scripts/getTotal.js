@@ -22,9 +22,6 @@ if (hourlyRate) {
   const nbOfHours = total / rate;
   console.log("\nIt looks like this invoice has an hourly rate:");
   console.log("Number of hours: ", nbOfHours);
-  console.log(
-    "Assuming you are sending invoice at monthly basis, working 5 days a week:"
-  );
 
   const now = new Date();
   let nbOfWorkDay = -nbOfDaysOff;
@@ -33,7 +30,10 @@ if (hourlyRate) {
       nbOfWorkDay++;
     }
   }
-  if (nbOfDaysOff !== 0) {
+  if (nbOfWorkDay !== 0) {
+    console.log(
+      "Assuming you are sending invoice at monthly basis, working 5 days a week:"
+    );
     console.log(
       "Number of work hours per week:",
       (nbOfHours / nbOfWorkDay) * 5
