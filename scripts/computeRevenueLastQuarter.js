@@ -31,15 +31,25 @@ console.warn({
 const doesDateFit = (date) =>
   Temporal.PlainDate.compare(previousQuarterStart, date) !== 1 &&
   Temporal.PlainDate.compare(currentQuarterStart, date) === 1;
-const extractDataIfDateFits = ({ reference, date, currency, line }) =>
+const extractDataIfDateFits = ({
+  currency,
+  date,
+  line,
+  reference,
+  roundUpTotalToNextInt,
+}) =>
   doesDateFit(Temporal.PlainDate.from(date?.$__toml_private_datetime))
     ? {
         reference,
         currency,
-        invoicedTotal: line.reduce(
+        sum: line.reduce(
           (pv, { unitPrice, quantity }) => pv + unitPrice * quantity,
           0
         ),
+        roundUpTotalToNextInt: Boolean(roundUpTotalToNextInt),
+        get invoicedTotal() {
+          return roundUpTotalToNextInt ? Math.ceil(this.sum) : this.sum;
+        },
       }
     : Promise.reject({
         reference,

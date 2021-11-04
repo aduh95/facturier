@@ -4,23 +4,37 @@ import fs from "fs";
 import TOML from "@aduh95/toml";
 import { getInvoiceFilePath } from "./get-invoice-info.js";
 
-const { client, currency, line, prepaid, tax, hourlyRate } = TOML.parse(
-  fs.readFileSync(getInvoiceFilePath())
-);
+const {
+  client,
+  currency,
+  date,
+  line,
+  prepaid,
+  roundUpTotalToNextInt,
+  tax,
+  hourlyRate,
+} = TOML.parse(fs.readFileSync(getInvoiceFilePath()));
 
-console.log("Invoiced to", client?.name);
+if (date === "REPLACEME") {
+  console.log("Draft invoice for", client?.name);
+} else if (typeof date === "object") {
+  console.log("Invoiced to", client?.name, "on", date.$__toml_private_datetime);
+}
 
-const total = line?.length
+const _total = line?.length
   ? line.reduce((pv, { unitPrice, quantity }) => pv + unitPrice * quantity, 0)
   : 0;
+const total = roundUpTotalToNextInt ? Math.ceil(_total) : _total;
 
 console.log("Total without tax", total, currency);
 console.log("Balance incl. tax", total * (1 - tax) - prepaid, currency);
 
-if (hourlyRate) {
+if (date === "REPLACEME" && hourlyRate) {
   const { rate, nbOfDaysOff, targetedNbOfWorkHourPerDay } = hourlyRate;
   const nbOfHours = total / rate;
-  console.log("\nIt looks like this invoice has an hourly rate:");
+  console.log(
+    "\nIt looks like this invoice is on going and has an hourly rate:"
+  );
   console.log("Number of hours: ", nbOfHours);
 
   const now = new Date();

@@ -13,9 +13,10 @@ LINE_TOTAL = "Amount"
 SUBTOTAL = "Subtotal"
 TAX = "Tax"
 TOTAL = "Total"
+ROUNDED = " (rounded up)"
 
 AMOUNT_PAID = "Prepaid amount"
-AMOUNT_DUE = "Invoice total"
+AMOUNT_DUE = "Amount due"
 
 DISCOUNT_RATE = "Discount rate"
 

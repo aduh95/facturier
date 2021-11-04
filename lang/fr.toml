@@ -13,6 +13,7 @@ LINE_TOTAL = "Montant net hors taxes"
 SUBTOTAL = "Total H.T."
 TAX = "Taxes"
 TOTAL = "Total"
+ROUNDED = " (arroundie à l'unité)"
 
 AMOUNT_PAID = "Acompte"
 AMOUNT_DUE = "Total dû"

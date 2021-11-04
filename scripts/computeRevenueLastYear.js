@@ -12,13 +12,22 @@ if (!/20\d\d/.test(year))
     "Only 21st century is supported (plus year 2000) (except year 2100)."
   );
 
-const getTotalAndCurrency = ({ currency, line }) => ({
+const getTotalAndCurrency = ({
+  reference,
   currency,
-  invoicedTotal: line.reduce(
+  line,
+  roundUpTotalToNextInt,
+}) => {
+  const sum = line.reduce(
     (pv, { unitPrice, quantity }) => pv + unitPrice * quantity,
     0
-  ),
-});
+  );
+  return {
+    reference,
+    currency,
+    invoicedTotal: roundUpTotalToNextInt ? Math.ceil(sum) : sum,
+  };
+};
 
 const filesToCheck = [];
 const dir = await fs.promises.opendir(data_folder);

@@ -22,7 +22,8 @@ export default function Invoice(props) {
   for (const { unitPrice, quantity } of props.line) {
     subtotal += unitPrice * quantity;
   }
-  const total = subtotal * (1 + tax);
+  const _total = subtotal * (1 + tax);
+  const total = props.roundUpTotalToNextInt ? Math.ceil(_total) : _total;
   const childProps = {
     ...props,
     tax,

@@ -13,7 +13,7 @@ const createTerm = (terms) =>
   </section>`;
 
 export default function Footer(props) {
-  const { format } = props;
+  const { format, roundUpTotalToNextInt } = props;
   return html`<footer>
     <section>
       <h5>${STRINGS.SUBTOTAL}</h5>
@@ -21,7 +21,7 @@ export default function Footer(props) {
       <h5>${STRINGS.TAX}</h5>
       <output>${format.percent(props.tax)}</output>
       <hr />
-      <h5>${STRINGS.TOTAL}</h5>
+      <h5>${STRINGS.TOTAL}${roundUpTotalToNextInt ? STRINGS.ROUNDED : ""}</h5>
       <output>${format.currency(props.total)}</output>
       <h5>${STRINGS.AMOUNT_PAID}</h5>
       <output>${format.currency(props.prepaid)}</output>
