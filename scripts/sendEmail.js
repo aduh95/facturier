@@ -147,10 +147,7 @@ function makeBody({ cc, to, from, subject, message, attachments }) {
       `--${separator}--`
     : txtBody;
 
-  return Buffer.from(headers + body)
-    .toString("base64")
-    .replaceAll("+", "-")
-    .replaceAll("/", "_");
+  return Buffer.from(headers + body).toString("base64url");
 }
 
 /**
