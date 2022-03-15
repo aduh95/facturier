@@ -28,8 +28,8 @@ DISCOUNT_RATE = "Discount rate"
 [[TERMS]]
   TEXT = [
     "This invoice is subject to the reverse-charge-procedure and corresponding to article 196 of the EU policy 2006/112/EC the receiver has to pay VAT.",
-    "",
-    "VAT not applicable, art. 293 B of the General Tax Code (TVA non applicable, article 293 B du CGI).",
+    # "",
+    # "VAT not applicable, art. 293 B of the General Tax Code (TVA non applicable, article 293 B du CGI).",
   ]
 
 [[TERMS]]

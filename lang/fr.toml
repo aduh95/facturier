@@ -26,7 +26,10 @@ DISCOUNT_RATE = "Geste commercial"
   BIC = "BIC (SWIFT) :"
 
 [[TERMS]]
-  TEXT = ["TVA non applicable, art. 293 B du CGI"]
+  # TEXT = ["TVA non applicable, art. 293 B du CGI"]
+  TEXT = [
+    "Cette facture est sujette au mechanisme d'autoliqudation : conformément à la directive 2006/112/CE du Conseil de l'UE, le destinataire doit payer la TVA.",
+  ]
 
 [[TERMS]]
   HEADING = "Conditions de règlement :"
