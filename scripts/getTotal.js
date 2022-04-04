@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from "fs";
+import process from "process";
 
 import TOML from "@aduh95/toml";
 import { getInvoiceFilePath } from "./get-invoice-info.js";
@@ -37,7 +38,7 @@ if (date === "REPLACEME" && hourlyRate) {
   );
   console.log("Number of hours: ", nbOfHours);
 
-  const now = new Date();
+  const now = process.argv[3] ? new Date(process.argv[3]) : new Date();
   let nbOfWorkDay = -nbOfDaysOff;
   for (let i = 1; i <= now.getDate(); i++) {
     if (new Date(now.getUTCFullYear(), now.getMonth(), i).getDay() % 6) {
