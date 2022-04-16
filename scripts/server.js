@@ -1,5 +1,5 @@
 import http from "http";
-import ws from "ws";
+import { WebSocketServer } from "ws";
 
 import requestListener from "./router.js";
 
@@ -29,7 +29,7 @@ export function startServer() {
     onServerError(err);
   });
   server.on("connection", registerConnection);
-  new ws.Server({ server }).on("connection", registerConnection);
+  new WebSocketServer({ server }).on("connection", registerConnection);
 
   return () =>
     new Promise((done, reject) => {
