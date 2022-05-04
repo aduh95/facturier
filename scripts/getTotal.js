@@ -23,7 +23,10 @@ if (date === "REPLACEME") {
 }
 
 const _total = line?.length
-  ? line.reduce((pv, { unitPrice, quantity }) => pv + unitPrice * quantity, 0)
+  ? line.reduce(
+      (pv, { unitPrice, quantity = 0 }) => pv + unitPrice * quantity,
+      0
+    )
   : 0;
 const total = roundUpTotalToNextInt ? Math.ceil(_total) : _total;
 

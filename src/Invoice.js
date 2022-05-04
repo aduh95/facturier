@@ -19,8 +19,8 @@ function createIntlFormatters({ locale, currency }) {
 export default function Invoice(props) {
   const tax = props.tax / 100;
   let subtotal = 0;
-  for (const { unitPrice, quantity } of props.line) {
-    subtotal += unitPrice * quantity;
+  for (const { unitPrice, pendingQuantity, quantity } of props.line) {
+    subtotal += unitPrice * (pendingQuantity ?? quantity);
   }
   const _total = subtotal * (1 + tax);
   const total = props.roundUpTotalToNextInt ? Math.ceil(_total) : _total;

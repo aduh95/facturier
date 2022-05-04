@@ -21,7 +21,11 @@ export default function InvoiceContent(props) {
           (line) => html`<tr>
             <td>${line.description}</td>
             <td>${props.format.currency(line.unitPrice)}</td>
-            <td>${line.quantity}</td>
+            <td>
+              ${line.pendingQuantity == null
+                ? line.quantity
+                : html`${line.pendingQuantity} <em>(pending)</em>`}
+            </td>
             <td>${props.format.currency(line.unitPrice * line.quantity)}</td>
           </tr>`
         )}
