@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// Usage: yarn total <TOML-file> [<date>]
 import fs from "fs";
 import process from "process";
 
