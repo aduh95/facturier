@@ -44,7 +44,9 @@ async function convertCurrency(line, currencyToConvertTo) {
 
   const match = unitPriceToConvert.exec(line);
   if (match == null)
-    return line.replace(/^(\s*)pendingQ(uantity\s*=\s)/, "$1q$2");
+    return line
+      .replace(/^(\s*)pendingQ(uantity\s*=\s)/, "$1q$2")
+      .replace(/^(\s*)finalU(nitPrice\s*=\s)/, "$1u$2");
 
   if (exchangeRate == null) throw new Error("Unknown exchange rate");
 
