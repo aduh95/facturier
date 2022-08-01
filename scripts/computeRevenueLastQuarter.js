@@ -51,21 +51,23 @@ const extractDataIfDateFits = ({
           return roundUpTotalToNextInt ? Math.ceil(this.sum) : this.sum;
         },
       }
-    : Promise.reject({
-        reference,
-        error: new Error("Date does not fit in the time period."),
-      });
+    : Promise.reject(
+        new Error("Date does not fit in the time period.", { cause: reference })
+      );
 
 const filesToCheck = [];
 const dir = await fs.promises.opendir(data_folder);
 for await (const dirent of dir) {
   if (dirent.name.endsWith(".toml")) {
-    filesToCheck.push(
-      fs.promises
-        .readFile(path.join(data_folder, dirent.name))
-        .then(TOML.parse)
-        .then(extractDataIfDateFits)
-    );
+    filesToCheck[
+      filesToCheck.push(
+        fs.promises
+          .readFile(path.join(data_folder, dirent.name))
+          .then(TOML.parse)
+          .then(extractDataIfDateFits)
+      ) - 1
+      // Empty catch block to avoid unhandled promise rejection crash.
+    ].catch(() => {});
   }
 }
 
