@@ -25,7 +25,7 @@ if (date === "REPLACEME") {
 
 const _total = line?.length
   ? line.reduce(
-      (pv, { unitPrice, quantity = 0 }) => pv + unitPrice * quantity,
+      (pv, { unitPrice = 0, quantity = 0 }) => pv + unitPrice * quantity,
       0
     )
   : 0;
