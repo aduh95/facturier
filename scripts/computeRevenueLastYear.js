@@ -38,6 +38,9 @@ for await (const dirent of dir) {
         .readFile(path.join(data_folder, dirent.name))
         .then(TOML.parse)
         .then(getTotalAndCurrency)
+        .catch((cause) =>
+          Promise.reject(new Error("Cannot parse " + dirent.name, { cause }))
+        )
     );
   }
 }
