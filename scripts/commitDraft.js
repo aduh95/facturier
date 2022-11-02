@@ -21,7 +21,7 @@ async function* sed(input, ref, date) {
 const emailTableHeader = /^\s*\[email\]/;
 const convertToCurrency = /^\s*convertToCurrency\s*=\s*["']([A-Z]+)["']/;
 const currencyToConvertFrom = /(?<=^\s*currency\s*=\s*["'])[A-Z]+/;
-const unitPriceToConvert = /(?<=^\s*unitPrice\s*=\s)\d+(?:\.\d+)?/;
+const unitPriceToConvert = /(?<=^\s*(?:pendingU|u)nitPrice\s*=\s)\d+(?:\.\d+)?/;
 let exchangeRate;
 
 async function convertCurrency(line, currencyToConvertTo) {
@@ -50,10 +50,12 @@ async function convertCurrency(line, currencyToConvertTo) {
 
   if (exchangeRate == null) throw new Error("Unknown exchange rate");
 
-  return line.replace(
-    unitPriceToConvert,
-    safeCurrencyMultiplication(match[0], exchangeRate)
-  );
+  return line
+    .replace(
+      unitPriceToConvert,
+      safeCurrencyMultiplication(match[0], exchangeRate)
+    )
+    .replace(/^(\s*)pendingU(nitPrice\s*=\s)/, "$1u$2");
 }
 try {
   const inputPath = getInvoiceFilePath();
