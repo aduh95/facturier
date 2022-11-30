@@ -23,16 +23,21 @@ if (date === "REPLACEME") {
   console.log("Invoiced to", client?.name, "on", date.$__toml_private_datetime);
 }
 
-const _total = line?.length
+const total = line?.length
   ? line.reduce(
       (pv, { unitPrice = 0, quantity = 0 }) => pv + unitPrice * quantity,
       0
     )
   : 0;
-const total = roundUpTotalToNextInt ? Math.ceil(_total) : _total;
+const totalWithTaxes = total * (1 - tax) - prepaid;
 
 console.log("Total without tax", total, currency);
-console.log("Balance incl. tax", total * (1 - tax) - prepaid, currency);
+console.log(
+  "Balance incl. tax",
+  roundUpTotalToNextInt ? Math.ceil(totalWithTaxes) : totalWithTaxes,
+  currency,
+  { roundUpTotalToNextInt }
+);
 
 if (date === "REPLACEME" && hourlyRate) {
   const { rate, nbOfDaysOff, targetedNbOfWorkHourPerDay } = hourlyRate;
