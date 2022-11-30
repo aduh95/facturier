@@ -14,6 +14,8 @@ async function* sed(input, ref, date) {
       yield `reference = "${ref}"`;
     } else if (line.includes('date = "REPLACEME"')) {
       yield `date = ${date}`;
+    } else if (/^\s*pending(UnitPrice|Quantity)\s*=/.test(line)) {
+      yield line.replace(/pending[A-Z]/, (s) => s.charAt(7).toLowerCase());
     } else yield line;
   }
 }
@@ -21,7 +23,7 @@ async function* sed(input, ref, date) {
 const emailTableHeader = /^\s*\[email\]/;
 const convertToCurrency = /^\s*convertToCurrency\s*=\s*["']([A-Z]+)["']/;
 const currencyToConvertFrom = /(?<=^\s*currency\s*=\s*["'])[A-Z]+/;
-const unitPriceToConvert = /(?<=^\s*(?:pendingU|u)nitPrice\s*=\s)\d+(?:\.\d+)?/;
+const unitPriceToConvert = /(?<=^\s*unitPrice\s*=\s)\d+(?:\.\d+)?/;
 let exchangeRate;
 
 async function convertCurrency(line, currencyToConvertTo) {
@@ -44,18 +46,14 @@ async function convertCurrency(line, currencyToConvertTo) {
 
   const match = unitPriceToConvert.exec(line);
   if (match == null)
-    return line
-      .replace(/^(\s*)pendingQ(uantity\s*=\s)/, "$1q$2")
-      .replace(/^(\s*)finalU(nitPrice\s*=\s)/, "$1u$2");
+    return line.replace(/^(\s*)finalU(nitPrice\s*=\s)/, "$1u$2");
 
   if (exchangeRate == null) throw new Error("Unknown exchange rate");
 
-  return line
-    .replace(
-      unitPriceToConvert,
-      safeCurrencyMultiplication(match[0], exchangeRate)
-    )
-    .replace(/^(\s*)pendingU(nitPrice\s*=\s)/, "$1u$2");
+  return line.replace(
+    unitPriceToConvert,
+    safeCurrencyMultiplication(match[0], exchangeRate)
+  );
 }
 try {
   const inputPath = getInvoiceFilePath();
