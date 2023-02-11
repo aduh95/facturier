@@ -1,6 +1,8 @@
 #!/usr/bin/env node
-import crypto from "crypto";
-import fs from "fs";
+import { spawn } from "node:child_process";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 import { google } from "googleapis";
 
 import TOML from "@aduh95/toml";
@@ -104,7 +106,56 @@ function getName(fromPathOrURL) {
   return path.toString().substring(path.lastIndexOf("/") + 1);
 }
 
-function makeBody({ cc, to, from, subject, message, attachments }) {
+function signPlainText(txt) {
+  const cp = spawn("gpg", ["--clearsign"], {
+    stdio: ["pipe", "pipe", "inherit"],
+  });
+  cp.stdin.end(txt);
+  const output = cp.stdout.toArray();
+  return new Promise((resolve, reject) => {
+    cp.on("error", reject);
+    cp.on("close", (code) => {
+      if (code === 0)
+        resolve(
+          output.then((result) => Buffer.concat(result).toString("utf-8"))
+        );
+      else reject(new Error("gpg exited with non-0 exit code: " + code));
+    });
+  });
+}
+
+function signBinaryFile(path) {
+  const cp = spawn("gpg", ["--detach-sign", "-o", "-", path], {
+    stdio: ["inherit", "pipe", "inherit"],
+  });
+  const output = cp.stdout.toArray();
+  return new Promise((resolve, reject) => {
+    cp.on("error", reject);
+    cp.on("close", (code) => {
+      if (code === 0) resolve(output.then(Buffer.concat));
+      else reject(new Error("gpg exited with non-0 exit code: " + code));
+    });
+  });
+}
+
+async function getSignedAttachements(attachments) {
+  const result = await Promise.all(
+    attachments.map(async (attachment) => {
+      const name = getName(attachment);
+      const [plain, signed] = await Promise.all([
+        readFile(attachment),
+        signBinaryFile(attachment),
+      ]);
+      return [
+        [name, plain],
+        [`${name}.sig`, signed],
+      ];
+    })
+  );
+  return result.flat(1);
+}
+
+async function makeBody({ cc, to, from, subject, message, attachments, sign }) {
   cc = cc ? `Cc: ${cc.join(";")}\n` : "";
   subject = [...subject].some((char) => char.charCodeAt(0) > 127)
     ? `=?utf-8?B?${Buffer.from(subject).toString("base64")}?=`
@@ -117,11 +168,12 @@ function makeBody({ cc, to, from, subject, message, attachments }) {
     `Subject: ${subject}\n` +
     "MIME-Version: 1.0\n";
 
+  const signedBody = sign ? await signPlainText(message) : message;
   const txtBody =
     'Content-Type: text/plain; charset="UTF-8"\n' +
     "Content-Transfer-Encoding: 8bit\n" +
     "\n" +
-    message;
+    signedBody;
 
   const separator =
     attachments?.length && crypto.randomBytes(20).toString("base64");
@@ -133,15 +185,19 @@ function makeBody({ cc, to, from, subject, message, attachments }) {
       `--${separator}\n` +
       txtBody +
       `\n--${separator}\n` +
-      attachments
+      (sign
+        ? await getSignedAttachements(attachments)
+        : attachments.map((attachment) => [
+            getName(attachment),
+            fs.readFileSync(attachment),
+          ])
+      )
         .map(
-          (attachment) =>
-            `Content-Type: application/octet-stream; name=${getName(
-              attachment
-            )}\n` +
+          ([name, binary]) =>
+            `Content-Type: application/octet-stream; name=${name}\n` +
             "Content-Transfer-Encoding: base64\n" +
             "Content-Disposition: attachment\n" +
-            fs.readFileSync(attachment).toString("base64")
+            binary.toString("base64")
         )
         .join(`\n--${separator}\n`) +
       `--${separator}--`
@@ -164,7 +220,7 @@ async function sendMail(auth, email) {
 
     // Request body metadata
     requestBody: {
-      raw: makeBody(email),
+      raw: await makeBody(email),
     },
   });
   console.log(res.data);
