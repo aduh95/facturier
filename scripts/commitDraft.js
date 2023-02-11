@@ -1,8 +1,10 @@
-import fs from "fs";
-import path from "path";
-import { spawn } from "child_process";
-import { createInterface as readline } from "readline";
-import { fileURLToPath } from "url";
+#!/usr/bin/env node
+import fs from "node:fs";
+import path from "node:path";
+import { spawn } from "node:child_process";
+import * as readline from "node:readline/promises";
+import { stdin, stdout } from "node:process";
+import { fileURLToPath } from "node:url";
 
 import { findNextReference } from "./findNextReference.js";
 import { getInvoiceFilePath } from "./get-invoice-info.js";
@@ -63,7 +65,8 @@ try {
   const date = now.toISOString().substring(0, 10);
   const ref = findNextReference(dir, date.substring(2, 4));
 
-  const input = readline(fs.createReadStream(inputPath));
+  const inputFile = await fs.promises.open(inputPath, "r");
+  const input = inputFile.readLines();
   const outputPath = path.join(dir, ref + ".toml");
   const output = fs.createWriteStream(outputPath);
 
@@ -105,6 +108,34 @@ try {
         : resolve()
     );
   });
+
+  {
+    const rl = readline.createInterface({ input: stdin, output: stdout });
+    const allowedAnswers = ["", "Y", "y", "N", "n"];
+
+    try {
+      let answer;
+      do {
+        answer = await rl.question("PTAL. Do you want to continue? [Y/n] ");
+      } while (!allowedAnswers.includes(answer));
+
+      if (answer === "N" || answer === "n") {
+        do {
+          answer = await rl.question(
+            "Do you want to clean up temp files? [Y/n] "
+          );
+        } while (!allowedAnswers.includes(answer));
+
+        if (answer !== "N" && answer !== "n") {
+          await fs.promises.rm(outputPath);
+          await fs.promises.rm(outputPath.replace(/\.toml$/, ".pdf"));
+        }
+        throw new Error("User requested changes");
+      }
+    } finally {
+      rl.close();
+    }
+  }
 
   if (sendEmail) {
     console.log("Sending the email…");
