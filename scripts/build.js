@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import puppeteer from "puppeteer";
 
 import { startServer, PORT_NUMBER } from "./server.js";
