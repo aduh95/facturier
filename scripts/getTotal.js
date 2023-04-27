@@ -39,15 +39,20 @@ console.log(
   { roundUpTotalToNextInt }
 );
 
-if (date === "REPLACEME" && hourlyRate) {
-  const { rate, nbOfDaysOff, targetedNbOfWorkHourPerDay } = hourlyRate;
-  const nbOfHours = total / rate;
-  console.log(
-    "\nIt looks like this invoice is on going and has an hourly rate:"
+if (hourlyRate) {
+  const { nbOfDaysOff, targetedNbOfWorkHourPerDay } = hourlyRate;
+  const nbOfHours = line.reduce(
+    (pv, { quantity = 0, hourFactor = 1 }) => pv + hourFactor * quantity,
+    0
   );
+  console.log("\nThe invoice contains hourly rate flag.");
   console.log("Number of hours: ", nbOfHours);
 
-  const now = process.argv[3] ? new Date(process.argv[3]) : new Date();
+  const now = process.argv[3]
+    ? new Date(process.argv[3])
+    : date === "REPLACEME"
+    ? new Date()
+    : new Date(date.$__toml_private_datetime);
   let nbOfWorkDay = -nbOfDaysOff;
   for (let i = 1; i <= now.getDate(); i++) {
     if (new Date(now.getUTCFullYear(), now.getMonth(), i).getDay() % 6) {
