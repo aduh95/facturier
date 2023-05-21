@@ -18,6 +18,7 @@ const getTotalAndCurrency = ({
   currency,
   line,
   roundUpTotalToNextInt,
+  tax,
 }) => {
   const sum = line.reduce(
     (pv, { unitPrice, quantity }) => pv + unitPrice * quantity,
@@ -28,6 +29,7 @@ const getTotalAndCurrency = ({
     currency,
     country: client.address.at(-1),
     invoicedTotal: roundUpTotalToNextInt ? Math.ceil(sum) : sum,
+    tax,
   };
 };
 
@@ -50,14 +52,18 @@ for await (const dirent of dir) {
 await Promise.allSettled(filesToCheck).then((promises) => {
   const currencies = new Set();
   let total = 0;
+  let totalVAT = 0;
   const totalPerCountry = { __proto__: null };
   console.log(promises);
   for (const { status, value: result } of promises) {
     if (status === "fulfilled") {
       if (result.currency) currencies.add(result.currency);
+      const vat = result.invoicedTotal * (result.tax / 100);
       total += result.invoicedTotal;
-      totalPerCountry[result.country] ??= 0;
-      totalPerCountry[result.country] += result.invoicedTotal;
+      totalVAT += vat;
+      totalPerCountry[result.country] ??= { total: 0, vat: 0 };
+      totalPerCountry[result.country].total += result.invoicedTotal;
+      totalPerCountry[result.country].vat += vat;
     }
   }
 
@@ -74,12 +80,29 @@ await Promise.allSettled(filesToCheck).then((promises) => {
       style: "currency",
       currency,
     });
-    console.log(`Total in ${year}:`, formatter.format(total));
     const countryEntries = Object.entries(totalPerCountry);
     if (countryEntries.length !== 1) {
-      for (const [country, total] of countryEntries) {
-        console.log(`Sub-total in ${country}:`, formatter.format(total));
+      for (const [country, { total, vat }] of countryEntries) {
+        console.log(
+          `Sub-total without taxes in ${country}:`,
+          formatter.format(total)
+        );
+        if (vat) {
+          console.log(`VAT in ${country}:`, formatter.format(vat));
+          console.log(
+            `Sub-total with VAT in ${country}:`,
+            formatter.format(total + vat)
+          );
+        }
       }
+    }
+    console.log(`Total without taxes in ${year}:`, formatter.format(total));
+    if (totalVAT) {
+      console.log(`VAT in ${year}:`, formatter.format(totalVAT));
+      console.log(
+        `Total with VAT in ${year}:`,
+        formatter.format(total + totalVAT)
+      );
     }
   }
 });
