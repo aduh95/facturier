@@ -11,6 +11,9 @@ tax = 5 # VAT in percent
   address = ["line 1", "line 2"]
   other_info = ["optional other info", "other info line 2"]
 
+[[TERMS]]
+  TEXT = ["Lign 1 of footer terms", "Lign 2 of footer terms"]
+
 [[line]]
   description = "item description"
   unitPrice = 100 # or hour rate, excl. VAT

@@ -30,7 +30,7 @@ export default function Footer(props) {
       <strong>${format.currency(props.totalDue)}</strong>
     </section>
     <aside>
-      ${STRINGS.TERMS.map(createTerm)}
+      ${(props.TERMS ?? []).concat(STRINGS.TERMS).map(createTerm)}
       <section>
         <h5>${STRINGS.BANK_INFO.HEADING}</h5>
         <ul>
