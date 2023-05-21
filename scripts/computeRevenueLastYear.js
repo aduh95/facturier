@@ -14,6 +14,7 @@ if (!/20\d\d/.test(year))
 
 const getTotalAndCurrency = ({
   reference,
+  client,
   currency,
   line,
   roundUpTotalToNextInt,
@@ -25,6 +26,7 @@ const getTotalAndCurrency = ({
   return {
     reference,
     currency,
+    country: client.address.at(-1),
     invoicedTotal: roundUpTotalToNextInt ? Math.ceil(sum) : sum,
   };
 };
@@ -48,11 +50,14 @@ for await (const dirent of dir) {
 await Promise.allSettled(filesToCheck).then((promises) => {
   const currencies = new Set();
   let total = 0;
+  const totalPerCountry = { __proto__: null };
   console.log(promises);
   for (const { status, value: result } of promises) {
     if (status === "fulfilled") {
       if (result.currency) currencies.add(result.currency);
       total += result.invoicedTotal;
+      totalPerCountry[result.country] ??= 0;
+      totalPerCountry[result.country] += result.invoicedTotal;
     }
   }
 
@@ -65,6 +70,16 @@ await Promise.allSettled(filesToCheck).then((promises) => {
     console.log(total, currencies);
   } else {
     const [currency] = currencies;
-    console.log(total, currency);
+    const formatter = new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency,
+    });
+    console.log(`Total in ${year}:`, formatter.format(total));
+    const countryEntries = Object.entries(totalPerCountry);
+    if (countryEntries.length !== 1) {
+      for (const [country, total] of countryEntries) {
+        console.log(`Sub-total in ${country}:`, formatter.format(total));
+      }
+    }
   }
 });

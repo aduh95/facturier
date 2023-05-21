@@ -8,7 +8,7 @@ tax = 5 # VAT in percent
 
 [client]
   name = "Client name"
-  address = ["line 1", "line 2"]
+  address = ["line 1", "line 2", "COUNTRY"]
   other_info = ["optional other info", "other info line 2"]
 
 [[TERMS]]
