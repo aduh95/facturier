@@ -3,12 +3,27 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import * as readline from "node:readline/promises";
-import { stdin, stdout } from "node:process";
+import { argv, stdin, stdout } from "node:process";
 import { fileURLToPath } from "node:url";
 
 import { findNextReference } from "./findNextReference.js";
 import { getInvoiceFilePath } from "./get-invoice-info.js";
 import safeCurrencyMultiplication from "./safeCurrencyMultiplication.js";
+
+const [, , , cliFlag] = argv;
+
+if (cliFlag === "--help" || cliFlag === "-h") {
+  console.log("Usage:");
+  console.log(
+    "\t$0 path/to/invoice.toml",
+    "\tBuild the invoice, sends the email if setup"
+  );
+  console.log(
+    "\t$0 path/to/invoice.toml --open-pdf",
+    "\tSame as above, but try to open the PDF (might not work on Windows)"
+  );
+  process.exit();
+}
 
 async function* sed(input, ref, date) {
   for await (const line of input) {
@@ -108,6 +123,13 @@ try {
         : resolve()
     );
   });
+
+  if (cliFlag === "--open-pdf") {
+    spawn("open", [outputPath.replace(/\.toml$/, ".pdf")], {
+      stdio: "ignore",
+      detached: true,
+    });
+  }
 
   {
     const rl = readline.createInterface({ input: stdin, output: stdout });
