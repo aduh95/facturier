@@ -10,6 +10,8 @@ I find it more convenient than using a spreadsheet bacause:
 
 ## Getting started
 
+Requires Node.js 18+.
+
 You need to clone this repo locally and run `yarn install` (or `npm install`). I
 recommend setting a private repo to store your client's data (the invoices).
 That folder needs to contain:
@@ -53,3 +55,17 @@ The build script performs the following steps:
 - it writes a `YYXXX.pdf` PDF document containing the final invoice.
 - it commits both files (using `YYXXX` as message) and pushes the commit to
   `origin/main`.
+
+### Useful scripts
+
+```
+# Computes the total for a (draft or not) invoice:
+yarn total path/to/invoice-draft.toml
+
+# Compute the total revenu last year, split per country, with and without VAT
+scripts/computeRevenueLastYear.js path/to/user_data
+
+# Compute the total revenu last quarter, split per country, with and without VAT
+scripts/computeRevenueLastQuarter.js path/to/user_data
+```
+
