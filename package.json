@@ -1,15 +1,16 @@
 {
   "name": "@aduh95/facturier",
+  "packageManager": "yarn@4.0.0-rc.45+sha224.54f0a052d2349fb4ea87e32dfc16e12c5a6fae38c6bf3aa249501c80",
   "dependencies": {
     "@aduh95/toml": "^0.4.0",
     "@aduh95/toml-prettifier": "^1.0.2",
     "@js-temporal/polyfill": "^0.4.1",
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "googleapis": "^100.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "googleapis": "^118.0.0",
     "htm": "^3.0.4",
     "preact": "^10.4.8",
-    "puppeteer": "^13.0.0",
-    "rollup": "^2.26.11",
+    "puppeteer": "^20.0.0",
+    "rollup": "^3.0.0",
     "sass": "^1.26.10",
     "ws": "^8.0.0"
   },

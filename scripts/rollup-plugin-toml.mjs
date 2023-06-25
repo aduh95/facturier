@@ -97,9 +97,6 @@ export default function plugin() {
         case "lang:strings.toml":
           // TODO: disable cache for this entry
           return getLangFromCurrentInvoice();
-
-        default:
-          return source.endsWith(".toml") ? source : null;
       }
     },
     transform(code, id) {

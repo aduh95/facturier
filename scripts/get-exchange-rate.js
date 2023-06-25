@@ -11,7 +11,7 @@ export default async function getExchangeRate(from, to) {
   xeEndpoint.searchParams.set("From", from);
   xeEndpoint.searchParams.set("To", to);
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: "new" });
   try {
     const page = await browser.newPage();
 

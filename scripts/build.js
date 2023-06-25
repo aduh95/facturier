@@ -9,10 +9,11 @@ const path = getInvoiceFilePath().replace(/\.toml$/, ".pdf");
 
 const closeServer = startServer();
 
-const browser = await puppeteer.launch();
+const browser = await puppeteer.launch({ headless: "new" });
 const page = await browser.newPage();
 
-await page.goto(`http://localhost:${await PORT_NUMBER}/`);
+await page.goto(`http://localhost:${await PORT_NUMBER}/`, 
+{ waitUntil: 'networkidle2' });
 
 await page.pdf({
   path,
