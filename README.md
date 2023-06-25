@@ -11,15 +11,24 @@ I find it more convenient than using a spreadsheet bacause:
 ## Getting started
 
 You need to clone this repo locally and run `yarn install` (or `npm install`). I
-recommend setting a private repo to store your client's data (the invoices), you
-can do that as a git submodule or on a separate folder. That folder needs to
-contain:
+recommend setting a private repo to store your client's data (the invoices).
+That folder needs to contain:
 
 - a `biller.toml` containing data regarding your company (see
   [sample](./biller-sample.toml) for reference).
 - a `invoice.toml` containing the draft of your invoice (see
   [sample](./bill-sample.toml) for reference).
 - a `.git` folder (I.E.: it should be a git repo).
+
+Here's a few command you can use to get started quickly:
+
+```sh
+git clone https://github.com/aduh95/facturier.git
+cd facturier
+corepack yarn install
+git init user_data
+cp biller-sample.toml user_data/biller.toml
+```
 
 You can preview the invoice in your web browser by running:
 

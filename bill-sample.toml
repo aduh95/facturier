@@ -6,6 +6,25 @@ currency = "CAD"
 prepaid = 50 # Amount already paid by the client
 tax = 5 # VAT in percent
 
+[[TERMS]]
+  TEXT = [
+    "This text will appear in the footer of your invoice, use it to pass legal information.",
+  ]
+
+[email]
+  to = ["your_client@example.com"]
+  from = "your_email@axample.com"
+  subject = "Invoice June 2023"
+  message = """\
+      Hello,\n\
+      \n\
+      You'll find attached the invoice for my work in June.\n\
+      \n\
+      Best Regards,\n\
+      Antoine\n\
+    """
+
+
 [client]
   name = "Client name"
   address = ["line 1", "line 2", "COUNTRY"]
