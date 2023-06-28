@@ -11,7 +11,7 @@ QUANTITY = "Quantité"
 LINE_TOTAL = "Montant net hors taxes"
 
 SUBTOTAL = "Total H.T."
-TAX = "Taxes"
+TAX = "T.V.A."
 TOTAL = "Total"
 ROUNDED = " (arroundie à l'unité)"
 

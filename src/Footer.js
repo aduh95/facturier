@@ -18,8 +18,8 @@ export default function Footer(props) {
     <section>
       <h5>${STRINGS.SUBTOTAL}</h5>
       <output>${format.currency(props.subtotal)}</output>
-      <h5>${STRINGS.TAX}</h5>
-      <output>${format.percent(props.tax)}</output>
+      <h5>${STRINGS.TAX} (${format.percent(props.tax)})</h5>
+      <output>${format.currency(props.subtotal * props.tax)}</output>
       <hr />
       <h5>${STRINGS.TOTAL}${roundUpTotalToNextInt ? STRINGS.ROUNDED : ""}</h5>
       <output>${format.currency(props.total)}</output>
