@@ -19,7 +19,9 @@ export default function InvoiceContent(props) {
       <tbody>
         ${line.map(
           (line) => html`<tr>
-            <td>${line.description}</td>
+            <td>
+              ${line.description}${line.outlay ? ` (${STRINGS.OUTLAY})` : ""}
+            </td>
             <td>${props.format.currency(line.unitPrice)}</td>
             <td>
               ${line.pendingQuantity == null

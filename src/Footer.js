@@ -16,10 +16,19 @@ export default function Footer(props) {
   const { format, roundUpTotalToNextInt } = props;
   return html`<footer>
     <section>
-      <h5>${STRINGS.SUBTOTAL}</h5>
+      <h5>
+        ${STRINGS.SUBTOTAL}${props.subtotalOutlays
+          ? ` (${STRINGS.EXCLUDING} ${STRINGS.OUTLAYS})`
+          : ""}
+      </h5>
       <output>${format.currency(props.subtotal)}</output>
       <h5>${STRINGS.TAX} (${format.percent(props.tax)})</h5>
       <output>${format.currency(props.subtotal * props.tax)}</output>
+      ${props.subtotalOutlays
+        ? html`<hr />
+            <h5>${STRINGS.SUBTOTAL} ${STRINGS.OUTLAYS}</h5>
+            <output>${format.currency(props.subtotalOutlays)}</output>`
+        : null}
       <hr />
       <h5>${STRINGS.TOTAL}${roundUpTotalToNextInt ? STRINGS.ROUNDED : ""}</h5>
       <output>${format.currency(props.total)}</output>

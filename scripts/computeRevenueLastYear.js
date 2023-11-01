@@ -21,7 +21,8 @@ const getTotalAndCurrency = ({
   tax,
 }) => {
   const sum = line.reduce(
-    (pv, { unitPrice, quantity }) => pv + unitPrice * quantity,
+    (pv, { unitPrice, quantity, outlay }) =>
+      pv + unitPrice * (outlay ? 0 : quantity),
     0
   );
   return {

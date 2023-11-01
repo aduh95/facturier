@@ -19,15 +19,19 @@ function createIntlFormatters({ locale, currency }) {
 export default function Invoice(props) {
   const tax = props.tax / 100;
   let subtotal = 0;
-  for (const { unitPrice, pendingQuantity, quantity } of props.line) {
-    subtotal += unitPrice * (pendingQuantity ?? quantity);
+  let subtotalOutlays = 0;
+  for (const { unitPrice, pendingQuantity, quantity, outlay } of props.line) {
+    const totalLine = unitPrice * (pendingQuantity ?? quantity);
+    if (outlay) subtotalOutlays += totalLine;
+    else subtotal += totalLine;
   }
-  const _total = subtotal * (1 + tax);
+  const _total = subtotal * (1 + tax) + subtotalOutlays;
   const total = props.roundUpTotalToNextInt ? Math.ceil(_total) : _total;
   const childProps = {
     ...props,
     tax,
     subtotal,
+    subtotalOutlays,
     total,
     totalDue: total - props.prepaid,
     format: createIntlFormatters(props),
