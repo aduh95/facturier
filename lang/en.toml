@@ -6,7 +6,7 @@ DUE_DATE = "Date"
 BILLED_TO = "Billed to"
 
 DESCRIPTION = "Description"
-UNIT_PRICE = "Hour rate"
+UNIT_PRICE = "Unit price"
 QUANTITY = "Quantity"
 LINE_TOTAL = "Amount"
 OUTLAY = "outlay"
