@@ -3,6 +3,8 @@ import { spawn } from "node:child_process";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import { readFile } from "node:fs/promises";
+import { createServer } from "node:http";
+import { once } from "node:events";
 import { google } from "googleapis";
 
 import TOML from "@aduh95/toml";
@@ -46,17 +48,43 @@ if (!fs.existsSync(CREDENTIALS_URL)) {
   );
 }
 
+async function findAsync(array, fn) {
+  for (const item of array) {
+    if (await fn(item)) return item;
+  }
+}
+
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
  * given callback function.
  * @param {Object} credentials The authorization client credentials.
  */
 async function authorize(credentials) {
-  const { client_secret, client_id, redirect_uris } = credentials.installed;
+  const { client_secret, client_id, redirect_uris } = credentials.web;
+
+  let requestHandler;
+  const server = createServer(function () {
+    return Reflect.apply(requestHandler, this, arguments);
+  });
+
   const oAuth2Client = new google.auth.OAuth2(
     client_id,
     client_secret,
-    redirect_uris[0]
+    await findAsync(redirect_uris, (url) => {
+      try {
+        url = new URL(url);
+      } catch {
+        return false;
+      }
+      if (url.hostname !== "localhost") return false;
+      server.listen(url.port);
+      return Promise.race([
+        once(server, "error").then(() => {
+          server.close();
+        }),
+        once(server, "listening").then(() => true),
+      ]);
+    })
   );
 
   try {
@@ -64,7 +92,12 @@ async function authorize(credentials) {
     oAuth2Client.setCredentials(JSON.parse(token));
     return oAuth2Client;
   } catch {
-    return getNewToken(oAuth2Client);
+    let deferred;
+    ({ deferred, requestHandler } = getNewToken(oAuth2Client));
+    const result = await deferred;
+    server.close();
+    server.unref();
+    return result;
   }
 }
 
@@ -73,32 +106,38 @@ async function authorize(credentials) {
  * execute the given callback with the authorized OAuth2 client.
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
  */
-async function getNewToken(oAuth2Client) {
+function getNewToken(oAuth2Client) {
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     scope: SCOPES,
   });
   console.log("Authorize this app by visiting this url:", authUrl);
-  const { createInterface } = await import("readline");
-  return new Promise((callback, reject) => {
-    const rl = createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
-    rl.question("Enter the code from that page here: ", (code) => {
-      rl.close();
-      oAuth2Client.getToken(code, (err, token) => {
-        if (err) return reject(err);
-        oAuth2Client.setCredentials(token);
-        // Store the token to disk for later program executions
-        fs.writeFile(TOKEN_URL, JSON.stringify(token), (err) => {
-          if (err) return console.error(err);
-          console.log("Token stored to", TOKEN_URL);
+  let callback, reject;
+  return {
+    deferred: new Promise((resolve, rej) => {
+      callback = resolve;
+      reject = rej;
+    }),
+    requestHandler: (req, res) => {
+      const qs = new URL(req.url, "http://localhost").searchParams;
+      if (qs.has("code")) {
+        res.end("Authentication successful! Please return to the console.");
+        oAuth2Client.getToken(qs.get("code"), (err, token) => {
+          if (err) return reject(err);
+          oAuth2Client.setCredentials(token);
+          // Store the token to disk for later program executions
+          fs.writeFile(TOKEN_URL, JSON.stringify(token), (err) => {
+            if (err) return console.error(err);
+            console.log("Token stored to", TOKEN_URL);
+          });
+          callback(oAuth2Client);
         });
-        callback(oAuth2Client);
-      });
-    });
-  });
+        return;
+      }
+      res.statusCode = 410;
+      res.end("Prerequesit failed");
+    },
+  };
 }
 
 function getName(fromPathOrURL) {
