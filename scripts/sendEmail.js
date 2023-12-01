@@ -41,13 +41,6 @@ const EMAIL_CREDENTIALS_DIR = new URL(`./${email.from}/`, CREDENTIALS_DIR);
 const TOKEN_URL = new URL(`./token.json`, EMAIL_CREDENTIALS_DIR);
 const CREDENTIALS_URL = new URL(`./credentials.json`, EMAIL_CREDENTIALS_DIR);
 
-if (!fs.existsSync(CREDENTIALS_URL)) {
-  throw new Error(
-    "You must get GMail API `credentials.json` first. Visit https://console.developers.google.com/apis/api/gmail.googleapis.com and store the file at " +
-      CREDENTIALS_URL
-  );
-}
-
 async function findAsync(array, fn) {
   for (const item of array) {
     if (await fn(item)) return item;
@@ -81,6 +74,7 @@ async function authorize(credentials) {
       return Promise.race([
         once(server, "error").then(() => {
           server.close();
+          return false;
         }),
         once(server, "listening").then(() => true),
       ]);
@@ -88,16 +82,17 @@ async function authorize(credentials) {
   );
 
   try {
-    const token = await fs.promises.readFile(TOKEN_URL);
+    const token = await fs.promises.readFile(TOKEN_URL, "utf-8");
     oAuth2Client.setCredentials(JSON.parse(token));
     return oAuth2Client;
   } catch {
     let deferred;
     ({ deferred, requestHandler } = getNewToken(oAuth2Client));
     const result = await deferred;
+    return result;
+  } finally {
     server.close();
     server.unref();
-    return result;
   }
 }
 
@@ -266,7 +261,18 @@ async function sendMail(auth, email) {
 }
 
 // Load client secrets from a local file.
-const credentials = await fs.promises.readFile(CREDENTIALS_URL);
+let credentials;
+try {
+  credentials = await fs.promises.readFile(CREDENTIALS_URL, "utf-8");
+} catch (err) {
+  if (err.code === "ENOENT") {
+    throw new Error(
+      "You must get GMail API `credentials.json` first. Visit https://console.developers.google.com/apis/api/gmail.googleapis.com and store the file at " +
+        CREDENTIALS_URL,
+      { cause: err }
+    );
+  } else throw err;
+}
 const auth = await authorize(JSON.parse(credentials));
 
 await sendMail(auth, email);
