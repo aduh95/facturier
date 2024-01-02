@@ -30,6 +30,18 @@ cd facturier
 corepack yarn install
 git init user_data
 cp biller-sample.toml user_data/biller.toml
+
+# Edit the biller.toml file
+# …
+# …
+(
+  cd user_data
+  git add biller.toml
+  git commit -m 'Add biller.toml'
+  # Then it is recommended to push it to a distant repository in case your local copy is lost:
+  git remote add origin …
+  git push -u origin main
+)
 ```
 
 You can preview the invoice in your web browser by running:
@@ -53,8 +65,7 @@ The build script performs the following steps:
 - it writes a `YYXXX.toml` file in the same dir as the invoice (`YYXXX` is the
   reference of the invoice).
 - it writes a `YYXXX.pdf` PDF document containing the final invoice.
-- it commits both files (using `YYXXX` as message) and pushes the commit to
-  `origin/main`.
+- it commits both files (using `YYXXX` as message) and run `git push`.
 
 ### Useful scripts
 
