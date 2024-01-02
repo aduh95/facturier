@@ -110,7 +110,7 @@ try {
   await new Promise((resolve, reject) => {
     console.log("Building PDF file…");
     const child_process = spawn(
-      process.argv0,
+      process.execPath,
       [fileURLToPath(new URL("./build.js", import.meta.url)), outputPath],
       {
         stdio: ["ignore", "inherit", "inherit"],
@@ -163,7 +163,7 @@ try {
     console.log("Sending the email…");
     await new Promise((resolve, reject) => {
       const child_process = spawn(
-        process.argv0,
+        process.execPath,
         [fileURLToPath(new URL("./sendEmail.js", import.meta.url)), outputPath],
         {
           stdio: ["inherit", "inherit", "inherit"],
@@ -207,7 +207,7 @@ try {
   });
 
   await new Promise((resolve, reject) => {
-    const child_process = spawn("git", ["push", "origin", "HEAD:main"], {
+    const child_process = spawn("git", ["push"], {
       stdio: ["inherit", "inherit", "inherit"],
       cwd: dir,
     });
