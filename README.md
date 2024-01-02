@@ -18,7 +18,7 @@ That folder needs to contain:
 
 - a `biller.toml` containing data regarding your company (see
   [sample](./biller-sample.toml) for reference).
-- a `invoice.toml` containing the draft of your invoice (see
+- a `yourclient-draft.toml` containing the draft of your invoice (see
   [sample](./bill-sample.toml) for reference).
 - a `.git` folder (I.E.: it should be a git repo).
 
@@ -35,13 +35,13 @@ cp biller-sample.toml user_data/biller.toml
 You can preview the invoice in your web browser by running:
 
 ```yarn
-yarn start path/to/invoice.toml
+yarn start user_data/yourclient-draft.toml
 ```
 
 You can save a PDF version by running:
 
 ```yarn
-yarn build path/to/invoice.toml
+yarn build user_data/yourclient-draft.toml
 ```
 
 The build script performs the following steps:
@@ -63,9 +63,8 @@ The build script performs the following steps:
 yarn total path/to/invoice-draft.toml
 
 # Compute the total revenu last year, split per country, with and without VAT
-scripts/computeRevenueLastYear.js path/to/user_data
+node scripts/computeRevenueLastYear.js path/to/user_data
 
 # Compute the total revenu last quarter, split per country, with and without VAT
-scripts/computeRevenueLastQuarter.js path/to/user_data
+node scripts/computeRevenueLastQuarter.js path/to/user_data
 ```
-

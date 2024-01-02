@@ -2,7 +2,10 @@ reference = "REPLACEME" # Invoice Number, will be replaced
 date = "REPLACEME" # Date of issue, will be replaced by local date on build
 
 locale = "fr-CA"
+# If you want to convert the invoice to a different currency, uncomment the following
+# convertToCurrency = "EUR"
 currency = "CAD"
+roundUpTotalToNextInt = false
 prepaid = 50 # Amount already paid by the client
 tax = 5 # VAT in percent
 
