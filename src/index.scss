@@ -1,4 +1,4 @@
-@import "./colors";
+@use "./colors" as *;
 
 html,
 body {
@@ -23,7 +23,7 @@ body {
 
 @page {
   margin: 0.5rem;
-  @bottom-center {
-    content: "Page" counter(page) " of " counter(pages);
-  }
+  // @bottom-center {
+    // content: "Page" counter(page) " of " counter(pages);
+  // }
 }

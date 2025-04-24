@@ -13,28 +13,24 @@ function createStyleElement(css, id) {
 export default function plugin() {
   return {
     name: "sass",
-    resolveId(source) {
-      if (source === PLUGIN_HELPER) return { id: PLUGIN_HELPER, moduleSideEffects: true }
+    resolveId(specifier, importer) {
+      if (specifier === PLUGIN_HELPER) return PLUGIN_HELPER;
     },
     load(id) {
       if (id === PLUGIN_HELPER) {
         return `export default ${createStyleElement};`;
       } else if (id.endsWith(".scss")) {
-        return new Promise((resolve, reject) =>
-          sass.render(
-            {
-              file: id,
-              sourceMap: "true",
-              sourceMapEmbed: true,
-            },
-            (err, result) => (err ? reject(err) : resolve(result))
-          )
-        ).then(
-          ({ css }) =>
-            `import helper from "${PLUGIN_HELPER}";export default helper(\`${css
-              .toString()
-              .replace("`", "\\`")}\`,"${id.replace('"', '\\"')}")`
-        );
+        const { css, sourceMap } = sass.compile(id, { sourceMap: true });
+
+        // Don't send useless info to browser
+        delete sourceMap.sourcesContent;
+
+        return `import helper from "${PLUGIN_HELPER}";export default helper(${JSON.stringify(
+          css +
+            "\n/*# sourceMappingURL=data:application/json," +
+            encodeURI(JSON.stringify(sourceMap)) +
+            " */"
+        )},${JSON.stringify(id)})`;
       }
     },
   };
