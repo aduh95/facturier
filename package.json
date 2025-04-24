@@ -1,15 +1,15 @@
 {
   "name": "@aduh95/facturier",
-  "packageManager": "yarn@4.0.2+sha256.825003a0f561ad09a3b1ac4a3b3ea6207af2796d54f62a9420520915721f5186",
+  "packageManager": "yarn@4.9.1+sha512.f95ce356460e05be48d66401c1ae64ef84d163dd689964962c6888a9810865e39097a5e9de748876c2e0bf89b232d583c33982773e9903ae7a76257270986538",
   "dependencies": {
     "@aduh95/toml": "^0.4.0",
     "@aduh95/toml-prettifier": "^1.0.2",
     "@js-temporal/polyfill": "^0.4.1",
     "@rollup/plugin-node-resolve": "^15.0.0",
-    "googleapis": "^128.0.0",
+    "googleapis": "^148.0.0",
     "htm": "^3.0.4",
     "preact": "^10.4.8",
-    "puppeteer": "^21.0.0",
+    "puppeteer": "^24.0.0",
     "rollup": "^4.0.0",
     "sass": "^1.26.10",
     "ws": "^8.0.0"
