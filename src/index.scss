@@ -22,8 +22,10 @@ body {
 }
 
 @page {
+  size: a4;
   margin: 0.5rem;
-  // @bottom-center {
-    // content: "Page" counter(page) " of " counter(pages);
-  // }
+  margin-bottom: 2rem;
+  @bottom-center {
+    content: "Page " counter(page) " of " counter(pages);
+  }
 }

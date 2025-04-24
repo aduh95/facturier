@@ -17,7 +17,7 @@ await page.goto(`http://localhost:${await PORT_NUMBER}/`,
 
 await page.pdf({
   path,
-  printBackground: true,
+  printBackground: false,
   preferCSSPageSize: true,
 });
 await page.close();
