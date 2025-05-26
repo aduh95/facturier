@@ -9,7 +9,7 @@ import { getInvoiceFilePath } from "./get-invoice-info.js";
 import assert from "node:assert";
 import { authorize } from "./googleAPI.js";
 
-const [, , , year = (new Date().getUTCFullYear() - 1).toString()] = process.argv;
+const [, , /* draft-invoice.toml */, year = new Date().getUTCFullYear()] = process.argv;
 
 // If modifying these scopes, delete token.json.
 const SCOPES = [
