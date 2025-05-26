@@ -73,7 +73,7 @@ export async function authorize(emailAddress, SCOPES, API) {
     return oAuth2Client;
   } catch {
     let deferred;
-    ({ deferred, requestHandler } = getNewToken(oAuth2Client));
+    ({ deferred, requestHandler } = getNewToken(oAuth2Client, SCOPES, TOKEN_URL));
     const result = await deferred;
     return result;
   } finally {
@@ -87,7 +87,7 @@ export async function authorize(emailAddress, SCOPES, API) {
  * execute the given callback with the authorized OAuth2 client.
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
  */
-function getNewToken(oAuth2Client) {
+function getNewToken(oAuth2Client, SCOPES, TOKEN_URL) {
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     scope: SCOPES,
