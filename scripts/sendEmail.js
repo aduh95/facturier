@@ -36,8 +36,8 @@ function getName(fromPathOrURL) {
   return path.toString().substring(path.lastIndexOf("/") + 1);
 }
 
-function signPlainText(txt) {
-  const cp = spawn("gpg", ["--clearsign"], {
+function signPlainText(txt, from = undefined) {
+  const cp = spawn("gpg", ["--clearsign", ...(from ? ['-u', from] : [])], {
     stdio: ["pipe", "pipe", "inherit"],
   });
   cp.stdin.end(txt);
@@ -98,7 +98,7 @@ async function makeBody({ cc, to, from, subject, message, attachments, sign }) {
     `Subject: ${subject}\n` +
     "MIME-Version: 1.0\n";
 
-  const signedBody = sign ? await signPlainText(message) : message;
+  const signedBody = sign ? await signPlainText(message, from) : message;
   const txtBody =
     'Content-Type: text/plain; charset="UTF-8"\n' +
     "Content-Transfer-Encoding: 8bit\n" +
