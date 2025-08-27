@@ -12,16 +12,24 @@ import { authorize } from "./googleAPI.js";
 const [, , /* draft-invoice.toml */, year = new Date().getUTCFullYear()] = process.argv;
 
 // If modifying these scopes, delete token.json.
-const SCOPES = [
-  "https://www.googleapis.com/auth/spreadsheets.readonly",
-];
+const SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
 const API = "sheets.googleapis.com";
 
 const draftContent = fs.readFileSync(getInvoiceFilePath());
-const { email, client, working_days, line: {0: {description, quantity}} } = TOML.parse(draftContent);
+const {
+  email,
+  client,
+  working_days,
+  line: {
+    0: { description, quantity },
+  },
+} = TOML.parse(draftContent);
 const user_data_dir = path.dirname(getInvoiceFilePath());
-const { name } = TOML.parse(fs.readFileSync(path.join(user_data_dir, 'biller.toml')));
+const { name } = TOML.parse(
+  fs.readFileSync(path.join(user_data_dir, "biller.toml"))
+);
 
+const nbDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 /**
  * Lists the labels in the user's account.
@@ -36,49 +44,84 @@ async function readSheet(auth, spreadsheetId, range) {
     range,
   });
   let count = 0;
-  for(const row of response.data.values) {
+  const months = Array.from({ length: 12 }, () => 0);
+  for (const row of response.data.values) {
     assert.strictEqual(row[2], name);
-    count += row.filter(cell => cell === 'Working').length / 2;
+    count += row.filter((cell) => cell === "Working").length / 2;
+    let index = 6;
+    for (let month = 0; month < 12; month++) {
+      months[month] +=
+        row
+          .slice(index, (index += nbDaysInMonth[month]))
+          .filter((cell) => cell === "Working").length / 2;
+    }
   }
-  return count;
+  return [count, months];
 }
 
-
-
 const promises = [
-  authorize(email.from, SCOPES, API)
-    .then(auth => readSheet(auth, working_days.sheetID, working_days.range))
+  authorize(email.from, SCOPES, API).then((auth) =>
+    readSheet(auth, working_days.sheetID, working_days.range)
+  ),
 ];
 
-for await(const dirent of await fs.promises.opendir(user_data_dir)) {
-    if (dirent.isDirectory() || !dirent.name.endsWith('.toml') || !dirent.name.startsWith(year % 100)) {
-        continue;
-    }
-    promises.push(fs.promises.readFile(path.join(user_data_dir, dirent.name)).then(TOML.parse).then(({client:c, line}) =>{
+for await (const dirent of await fs.promises.opendir(user_data_dir)) {
+  if (
+    dirent.isDirectory() ||
+    !dirent.name.endsWith(".toml") ||
+    !dirent.name.startsWith(year % 100)
+  ) {
+    continue;
+  }
+  promises.push(
+    fs.promises
+      .readFile(path.join(user_data_dir, dirent.name))
+      .then(TOML.parse)
+      .then(({ client: c, line }) => {
         if (c.name !== client.name) return 0;
         assert.strictEqual(line[0]?.description, description);
         return line[0].quantity;
-    }));
+      })
+  );
 }
 
-const [daysWorked, ...dayAlreadyInvoiced] = await Promise.all(promises);
-const daysAlreadyInvoiced = dayAlreadyInvoiced.reduce((current, sum) => current + sum, 0);
-const diff = daysWorked - daysAlreadyInvoiced
+const [[daysWorked, daysWorkedMonthByMonth], ...dayAlreadyInvoiced] =
+  await Promise.all(promises);
+const daysAlreadyInvoiced = dayAlreadyInvoiced.reduce(
+  (current, sum) => current + sum,
+  0
+);
+const diff = daysWorked - daysAlreadyInvoiced;
 
-console.log({daysWorked, daysAlreadyInvoiced, diff, quantityInDraft: quantity})
+console.log({
+  daysWorked,
+  daysAlreadyInvoiced,
+  diff,
+  quantityInDraft: quantity,
+  daysWorkedMonthByMonth,
+});
+
+assert.strictEqual(diff, daysWorkedMonthByMonth.findLast(Boolean));
 
 if (diff !== quantity) {
-    console.log(`Updating ${getInvoiceFilePath()}...`);
-    const draft = draftContent.toString('utf-8');
-    const needle = `
+  console.log(`Updating ${getInvoiceFilePath()}...`);
+  const draft = draftContent.toString("utf-8");
+  const needle = `
 [[line]]
 description = ${JSON.stringify(description)}
 unitPrice =`;
-    const index = draft.indexOf(needle);
-    assert.notStrictEqual(index, -1);
-    const startNeedle = `\nquantity = `;
-    const startIndex = draft.indexOf(`${startNeedle}${quantity}\n`, index + needle.length);
-    assert.notStrictEqual(startIndex, -1);
-    fs.writeFileSync(getInvoiceFilePath(), `${draft.slice(0, startIndex+startNeedle.length)}${diff}${draft.slice(startIndex+startNeedle.length+quantity.toString().length)}`);
+  const index = draft.indexOf(needle);
+  assert.notStrictEqual(index, -1);
+  const startNeedle = `\nquantity = `;
+  const startIndex = draft.indexOf(
+    `${startNeedle}${quantity}\n`,
+    index + needle.length
+  );
+  assert.notStrictEqual(startIndex, -1);
+  fs.writeFileSync(
+    getInvoiceFilePath(),
+    `${draft.slice(0, startIndex + startNeedle.length)}${diff}${draft.slice(
+      startIndex + startNeedle.length + quantity.toString().length
+    )}`
+  );
 }
-
