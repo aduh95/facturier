@@ -5,6 +5,7 @@ import { spawn } from "node:child_process";
 import * as readline from "node:readline/promises";
 import { argv, stdin, stdout } from "node:process";
 import { fileURLToPath } from "node:url";
+import { Temporal } from "@js-temporal/polyfill";
 
 import { findNextReference } from "./findNextReference.js";
 import { getInvoiceFilePath } from "./get-invoice-info.js";
@@ -25,12 +26,14 @@ if (cliFlag === "--help" || cliFlag === "-h") {
   process.exit();
 }
 
-async function* sed(input, ref, date) {
+async function* sed(input, ref, date, subject) {
   for await (const line of input) {
     if (line.includes('reference = "REPLACEME"')) {
       yield `reference = "${ref}"`;
     } else if (line.includes('date = "REPLACEME"')) {
       yield `date = ${date}`;
+    } else if (line.includes('subject = "REPLACEME"')) {
+      yield `subject = ${JSON.stringify(subject)}`;
     } else if (/^\s*pending(UnitPrice|Quantity)\s*=/.test(line)) {
       yield line.replace(/pending[A-Z]/, (s) => s.charAt(7).toLowerCase());
     } else yield line;
@@ -75,10 +78,15 @@ async function convertCurrency(line, currencyToConvertTo) {
 try {
   const inputPath = getInvoiceFilePath();
 
-  const now = new Date();
+  const now = Temporal.Now.plainDateISO();
   const dir = path.dirname(inputPath);
-  const date = now.toISOString().substring(0, 10);
+  const date = now.toString();
   const ref = findNextReference(dir, date.substring(2, 4));
+  const subject = `Invoice for ${Temporal.PlainYearMonth.from({
+    calendar: 'gregory',
+    year: now.year,
+    month: now.month,
+  }).toLocaleString("en-US", { dateStyle: "full" })}`;
 
   const inputFile = await fs.promises.open(inputPath, "r");
   const input = inputFile.readLines();
@@ -88,7 +96,7 @@ try {
   let sendEmail = false;
   let currencyToConvertTo;
 
-  for await (const line of sed(input, ref, date)) {
+  for await (const line of sed(input, ref, date, subject)) {
     if (emailTableHeader.test(line)) sendEmail = true;
 
     if (currencyToConvertTo == null) {
